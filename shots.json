@@ -1,0 +1,424 @@
+{
+  "Straight Drive": {
+    "summary": "A classical shot played along the ground straight back past the bowler.",
+    "fields": "Straight, long-off and long-on region.",
+    "variations": [
+      "Lofted straight drive",
+      "Checked drive",
+      "Late straight drive"
+    ],
+    "masters": "Sachin Tendulkar, Virat Kohli, Kumar Sangakkara",
+    "history": "One of the oldest and purest cricket strokes, known as the symbol of textbook batting.",
+    "improve": "Keep head still, firm front knee, full extension of the bat.",
+    "alt_safe": [
+      "Mid-off push for single",
+      "Mid-on push for quick rotation",
+      "Push past bowler along the ground"
+    ],
+    "alt_aggressive": [
+      "Loft over the bowler",
+      "Loft over long-off",
+      "Loft over long-on"
+    ],
+    "final_feedback": [
+      "Time your front-foot stride earlier.",
+      "Keep your head directly over the ball at impact.",
+      "Complete a full, relaxed follow-through.",
+      "Avoid falling toward the off side.",
+      "Meet the ball under your eyes, not beside your body."
+    ]
+  },
+  "Cover Drive": {
+    "summary": "Front-foot shot played through the covers with full face of the bat.",
+    "fields": "Extra cover, cover, mid-off.",
+    "variations": [
+      "Inside-out cover drive",
+      "Lofted cover drive"
+    ],
+    "masters": "Babar Azam, Virat Kohli, Ian Bell",
+    "history": "The cover drive became iconic in Test cricket for elegance and timing.",
+    "improve": "Lean into the ball, open shoulder slightly, high elbow finish.",
+    "alt_safe": [
+      "Punch along the ground through extra cover",
+      "Soft push to mid-off for a single",
+      "Check drive in front of cover fielder"
+    ],
+    "alt_aggressive": [
+      "Inside-out six over cover",
+      "Lofted extra-cover boundary",
+      "Loft over mid-off when the fielder is up"
+    ],
+    "final_feedback": [
+      "Stride toward the line of the ball, not across it.",
+      "Maintain a high elbow for a classical shape.",
+      "Let your hands flow through the line of the ball.",
+      "Stay balanced while leaning into the shot.",
+      "Contact the ball slightly in front of your pad."
+    ]
+  },
+  "On Drive": {
+    "summary": "Front-foot drive played towards mid-on with a straight bat.",
+    "fields": "Mid-on, straight midwicket, long-on.",
+    "variations": [
+      "Lofted on-drive",
+      "Punch on-drive"
+    ],
+    "masters": "Rahul Dravid, VVS Laxman, Kane Williamson",
+    "history": "Considered one of the toughest shots because it requires excellent timing and balance.",
+    "improve": "Transfer body weight smoothly and avoid falling over to the off side.",
+    "alt_safe": [
+      "Clip gently to mid-on for one",
+      "Punch straight of mid-on along the ground",
+      "Glide off the pads toward deep midwicket for two"
+    ],
+    "alt_aggressive": [
+      "Loft over long-on",
+      "Power on-drive over mid-on",
+      "Whip over wide long-on for six"
+    ],
+    "final_feedback": [
+      "Keep your front knee strong and pointed down the pitch.",
+      "Avoid closing your stance too early.",
+      "Use your wrists to control the on-side angle.",
+      "Keep your head still and over the front leg.",
+      "Let your bat swing straight, not across your body."
+    ]
+  },
+  "Lofted Drive": {
+    "summary": "Aggressive aerial version of the drive clearing the infield.",
+    "fields": "Long-off, long-on, straight down the ground.",
+    "variations": [
+      "Inside-out lofted drive",
+      "Lofted on-drive"
+    ],
+    "masters": "Rohit Sharma, AB de Villiers, David Warner",
+    "history": "Popularized by ODI and T20 cricket to score boundaries and sixes.",
+    "improve": "Stay tall, keep shape, full follow-through.",
+    "alt_safe": [
+      "Controlled checked drive along the ground",
+      "Punch through mid-off with less elevation",
+      "Firm push back past the bowler"
+    ],
+    "alt_aggressive": [
+      "Aim over long-off when field is up",
+      "Hit over long-on to target straight boundary",
+      "Inside-out loft over extra cover"
+    ],
+    "final_feedback": [
+      "Build a strong base before swinging hard.",
+      "Do not lose your head position while going aerial.",
+      "Extend your arms fully through contact.",
+      "Choose the gap before you swing.",
+      "Practise timing first, then power."
+    ]
+  },
+  "Pull Shot": {
+    "summary": "Short ball played with a horizontal bat toward the leg side.",
+    "fields": "Square leg, deep midwicket, fine leg.",
+    "variations": [
+      "Roll-over wrist pull",
+      "Front-foot pull",
+      "Back-foot pull"
+    ],
+    "masters": "Ricky Ponting, Rohit Sharma, Viv Richards",
+    "history": "Developed as a strong answer to fast short-pitched bowling.",
+    "improve": "Watch bounce early and get into position quickly.",
+    "alt_safe": [
+      "Roll wrists to keep the ball down in front of square",
+      "Control the pull toward deep square for one or two",
+      "Drop the ball to leg side for a quick single"
+    ],
+    "alt_aggressive": [
+      "Front-foot pull over midwicket for six",
+      "Back-foot pull into the stands at deep midwicket",
+      "Hook variation over fine leg rope"
+    ],
+    "final_feedback": [
+      "Judge the length early before committing.",
+      "Get into position quickly on either front or back foot.",
+      "Keep your eyes level while the ball rises.",
+      "Roll your wrists if you want to keep the ball down.",
+      "Practise on slower bowling before facing real pace."
+    ]
+  },
+  "Hook Shot": {
+    "summary": "Pull shot variation played to a head-high bouncer.",
+    "fields": "Fine leg and backward square leg.",
+    "variations": [
+      "Controlled hook",
+      "Power hook"
+    ],
+    "masters": "Brian Lara, Ricky Ponting, Chris Gayle",
+    "history": "Used especially when bowlers target the helmet with bouncers.",
+    "improve": "Keep eyes level; roll wrists to keep ball down if playing safely.",
+    "alt_safe": [
+      "Drop gloves and let the ball go if unsafe",
+      "Glance the ball fine for a controlled boundary",
+      "Roll wrists to keep the hook down to deep square"
+    ],
+    "alt_aggressive": [
+      "Full-blooded hook over fine leg",
+      "Hook into the crowd at deep square leg",
+      "Stand tall and pull in front of square for six"
+    ],
+    "final_feedback": [
+      "Never hook blindly; always see the ball clearly.",
+      "Maintain balance even while rotating your body.",
+      "Practise ducking and swaying as well as attacking.",
+      "Decide early if you will attack or evade.",
+      "Wear proper protection when practising the hook."
+    ]
+  },
+  "Sweep": {
+    "summary": "Front-foot rotation sweep against spin played along the ground.",
+    "fields": "Square leg, fine leg, backward square.",
+    "variations": [
+      "Conventional sweep",
+      "Slog sweep"
+    ],
+    "masters": "Joe Root, Yuvraj Singh, Matthew Hayden",
+    "history": "A dominant shot especially in subcontinent pitches versus spinners.",
+    "improve": "Strong front-knee base and balance while swinging.",
+    "alt_safe": [
+      "Soft sweep into vacant square leg",
+      "Fine sweep along the ground to fine leg",
+      "Controlled sweep between fielders for ones and twos"
+    ],
+    "alt_aggressive": [
+      "Slog sweep over deep midwicket",
+      "Big sweep into the stands at backward square leg",
+      "Flat sweep over square leg boundary"
+    ],
+    "final_feedback": [
+      "Get low with a stable front knee.",
+      "Keep your head level to avoid losing sight of the ball.",
+      "Swing smoothly, not too fast, to control placement.",
+      "Practise both conventional and fine sweeps.",
+      "Read the length; avoid sweeping balls that are too full."
+    ]
+  },
+  "Slog Sweep": {
+    "summary": "A power sweep hit in the air over the leg-side field.",
+    "fields": "Deep midwicket, cow corner, straight midwicket boundary.",
+    "variations": [
+      "Flat slog sweep",
+      "Aerial slog sweep"
+    ],
+    "masters": "Yuvraj Singh, Glenn Maxwell, Rishabh Pant",
+    "history": "A T20 power shot used to counter spinners aggressively.",
+    "improve": "Stable lower body and keep eyes on the ball during fearless swing.",
+    "alt_safe": [
+      "Roll the wrists to keep the slog sweep down to deep midwicket",
+      "Target the gap between deep square and long-on along the ground",
+      "Switch to a conventional sweep if field is spread"
+    ],
+    "alt_aggressive": [
+      "Big slog over cow corner for six",
+      "Flat slog sweep just over infield fielders",
+      "Aim at vacant stands between deep midwicket and long-on"
+    ],
+    "final_feedback": [
+      "Commit fully when you choose the slog sweep.",
+      "Bend your knees to stay balanced when swinging hard.",
+      "Keep watching the ball until the very last moment.",
+      "Practise hitting with shape, not just brute power.",
+      "Know the field—aim into big gaps, not at fielders."
+    ]
+  },
+  "Late Cut": {
+    "summary": "Shot played softly behind point using the ball's pace.",
+    "fields": "Third man, backward point.",
+    "variations": [
+      "Soft late cut",
+      "Guided late cut"
+    ],
+    "masters": "Kane Williamson, Sachin Tendulkar, Steve Smith",
+    "history": "Originated on fast English pitches to use ball pace to score behind point.",
+    "improve": "Play it late and let the hands do the work.",
+    "alt_safe": [
+      "Open the face to glide to third man along the ground",
+      "Drop the ball very fine to steal a single",
+      "Use late cut to beat the slip and gully cordon safely"
+    ],
+    "alt_aggressive": [
+      "Upper cut over slips for boundary",
+      "Hard late cut past backward point",
+      "Slash late over third man for six"
+    ],
+    "final_feedback": [
+      "Play the ball very late under your eyes.",
+      "Relax your hands to let the ball run off the bat face.",
+      "Keep a light grip to control touch and placement.",
+      "Practise against throwdowns aimed outside off stump.",
+      "Know when to leave the ball instead of cutting."
+    ]
+  },
+  "Square Cut": {
+    "summary": "Back-foot shot hit square of the wicket on the off side.",
+    "fields": "Point, backward point, deep cover point.",
+    "variations": [
+      "Upper cut",
+      "Back-foot punch square"
+    ],
+    "masters": "Virender Sehwag, Sanath Jayasuriya, Steve Smith",
+    "history": "A dominating shot against width outside off stump.",
+    "improve": "Get on top of the bounce to avoid hitting in the air.",
+    "alt_safe": [
+      "Punch square along the ground in front of point",
+      "Open the face to guide behind point for a single",
+      "Check your swing to keep the ball down to sweeper cover"
+    ],
+    "alt_aggressive": [
+      "Slash hard over point",
+      "Hit square cut over backward point",
+      "Upper cut over third man on short and wide balls"
+    ],
+    "final_feedback": [
+      "Move your weight slightly onto the back foot before swinging.",
+      "Get on top of the bounce for a safe ground stroke.",
+      "Avoid throwing your hands too hard at the ball.",
+      "Practise controlling the cut shot with softer hands.",
+      "Pick balls that are short and wide—don’t cut everything."
+    ]
+  },
+  "Paddle Scoop": {
+    "summary": "Unorthodox shot scooped over the keeper or fine leg.",
+    "fields": "Fine leg, short fine leg, third man.",
+    "variations": [
+      "Ramp scoop",
+      "Reverse scoop"
+    ],
+    "masters": "AB de Villiers, Tillakaratne Dilshan, Glenn Maxwell",
+    "history": "A modern T20 creation to attack fine-leg fielders.",
+    "improve": "Watch ball closely, get into low position, use bowler’s pace.",
+    "alt_safe": [
+      "Soft paddle to fine leg for one",
+      "Deflect ball gently over short fine leg",
+      "Glide the ball to third man instead of scooping"
+    ],
+    "alt_aggressive": [
+      "Full ramp over keeper for six",
+      "Big scoop over fine leg rope",
+      "Reverse scoop over short third man"
+    ],
+    "final_feedback": [
+      "Practise this shot only after mastering basic strokes.",
+      "Get very low and balanced before scooping.",
+      "Keep your eyes level while the ball is delivered.",
+      "Use the bowler’s pace rather than swinging too hard.",
+      "Be aware of field setting and boundary length."
+    ]
+  },
+  "Reverse Sweep": {
+    "summary": "Switch stance and sweep the ball opposite-handed.",
+    "fields": "Backward point, third man, deep cover.",
+    "variations": [
+      "Reverse slog sweep",
+      "Reverse paddle"
+    ],
+    "masters": "Kevin Pietersen, Glenn Maxwell, Jos Buttler",
+    "history": "A popular skill-shot in modern T20 cricket.",
+    "improve": "Quick hand switch and maintain balance while rotating.",
+    "alt_safe": [
+      "Reverse tap behind point for one",
+      "Roll wrists to keep reverse sweep down",
+      "Use reverse paddle to fine third man region"
+    ],
+    "alt_aggressive": [
+      "Reverse slog sweep over point for six",
+      "Big reverse hit over deep cover",
+      "Flat reverse sweep between point and third man"
+    ],
+    "final_feedback": [
+      "Practise the hand change slowly at first.",
+      "Maintain a strong base while rotating your body.",
+      "Only play it to balls within your hitting arc.",
+      "Decide early whether to play normal or reverse sweep.",
+      "Use this shot when field is stacked on leg side."
+    ]
+  },
+  "Flick Shot": {
+    "summary": "Front-foot shot with wrist work to hit toward the leg side.",
+    "fields": "Midwicket, square leg, fine leg.",
+    "variations": [
+      "Flick off the pads",
+      "On-drive flick"
+    ],
+    "masters": "VVS Laxman, KL Rahul, Rohit Sharma",
+    "history": "Iconic on subcontinent pitches with strong wristy batters.",
+    "improve": "Roll wrists and use timing rather than raw strength.",
+    "alt_safe": [
+      "Soft flick to square leg for one",
+      "Glance fine for easy runs",
+      "Controlled flick between midwicket and square leg"
+    ],
+    "alt_aggressive": [
+      "Whip over deep midwicket for six",
+      "Flick over fine leg rope",
+      "Pick up shot over backward square leg"
+    ],
+    "final_feedback": [
+      "Let the ball come to you before flicking.",
+      "Use your wrists to control direction and power.",
+      "Keep your head still even while rotating the bat.",
+      "Practise against straight balls on pads, not wide ones.",
+      "Avoid overcommitting across the crease."
+    ]
+  },
+  "Helicopter Shot": {
+    "summary": "A signature power yorker shot using heavy wrist rotation.",
+    "fields": "Long-on, cow corner, long-off.",
+    "variations": [
+      "Power helicopter",
+      "Running helicopter"
+    ],
+    "masters": "MS Dhoni",
+    "history": "Invented and made famous by MS Dhoni using incredible wrist power.",
+    "improve": "Strong bottom-hand wrist snap and lower body power.",
+    "alt_safe": [
+      "Drive yorkers along the ground for safe singles",
+      "Turn straight balls into flicks if risk is high",
+      "Check your swing if timing is off"
+    ],
+    "alt_aggressive": [
+      "Full helicopter into cow corner",
+      "Helicopter shot straight over long-on",
+      "Running helicopter when charging bowler"
+    ],
+    "final_feedback": [
+      "Build forearm and wrist strength progressively.",
+      "Practise on slower bowling before full pace.",
+      "Time the ball at the very last moment of the swing.",
+      "Keep a low, stable base for big power.",
+      "Use this shot sparingly as a surprise weapon."
+    ]
+  },
+  "Upper Cut": {
+    "summary": "Late cut in the air using bounce of a short-pitched wide ball.",
+    "fields": "Third man and deep point boundary.",
+    "variations": [
+      "Guided upper cut",
+      "Hard upper cut"
+    ],
+    "masters": "Sachin Tendulkar, Virender Sehwag, Suryakumar Yadav",
+    "history": "First seen regularly in ODI cricket against short-and-wide fast bowling.",
+    "improve": "Use bounce and keep soft hands for safe execution.",
+    "alt_safe": [
+      "Guide the ball over slip cordon for a controlled boundary",
+      "Open the face to run the ball down to third man",
+      "Leave the ball if it is too wide or too high"
+    ],
+    "alt_aggressive": [
+      "Full upper cut over third man",
+      "Hard cut over deep point",
+      "Attack short and wide balls over the infield"
+    ],
+    "final_feedback": [
+      "Wait for the ball to rise before playing.",
+      "Play with soft hands to control the deflection.",
+      "Practise judging short and wide lengths.",
+      "Avoid throwing your bat too hard at the ball.",
+      "Use this shot mainly when there is no third man."
+    ]
+  }
+}

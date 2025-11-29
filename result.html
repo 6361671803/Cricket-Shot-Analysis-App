@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shot Analysis Result</title>
+<style>
+body {
+    background: radial-gradient(circle at top, #146b35 0%, #02150d 55%, #000 100%);
+    color: #fff; font-family: system-ui, sans-serif;
+    padding: 25px;
+    display:flex; justify-content:center;
+}
+.wrap { width:100%; max-width:1100px; }
+.card {
+    position:relative;
+    background: rgba(0,0,0,0.55);
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow:0 18px 40px rgba(0,0,0,0.8);
+}
+h1 { text-align:center; margin-bottom:6px; font-size:2.1rem; }
+.sub { text-align:center; font-size:0.95rem; opacity:0.86; margin-bottom:8px; }
+
+.anim-banner {
+    text-align:center;
+    margin-bottom:12px;
+    font-size:1rem;
+    animation:flash 1.3s infinite;
+}
+@keyframes flash {
+    0%{opacity:1;}
+    50%{opacity:0.6;}
+    100%{opacity:1;}
+}
+
+/* NEW: simple cricket ball animation */
+.cricket-anim {
+    position:relative;
+    height:40px;
+    margin-bottom:8px;
+    overflow:hidden;
+}
+.cricket-anim .ball {
+    position:absolute;
+    top:8px;
+    left:-40px;
+    font-size:1.4rem;
+    animation:ball-move 2.4s linear infinite;
+}
+@keyframes ball-move {
+    0% { left: -40px; }
+    100% { left: calc(100% + 40px); }
+}
+
+img {
+    width:100%;
+    border-radius: 18px;
+    margin-top: 12px;
+    border:2px solid rgba(255,255,255,0.5);
+}
+
+.weight-section { margin-top:20px; }
+.bar {
+    margin-top:8px;
+    width:100%; height:26px;
+    border-radius:999px;
+    display:flex; overflow:hidden;
+    border:1px solid rgba(255,255,255,0.4);
+}
+.backseg { background:#37474f; height:100%; }
+.frontseg { background:linear-gradient(90deg,#ffc400,#ff6d00); height:100%; }
+
+h2, h3 { margin-top:18px; }
+ul { margin-left:22px; margin-top:6px; }
+.back-link {
+    display:block;
+    margin-top:26px;
+    text-align:center;
+    color:#fff;
+    text-decoration:none;
+}
+.back-link:hover { text-decoration:underline; }
+
+.shot-select {
+    margin-top:10px;
+}
+.shot-select select {
+    padding:6px 10px;
+    border-radius:10px;
+    border:none;
+    background:#122325;
+    color:#fff;
+}
+.shot-select button {
+    margin-top:10px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:none;
+    cursor:pointer;
+    background:#ffc400;
+    color:#1b1b1b;
+    font-weight:600;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="card">
+
+    <!-- NEW: cricket ball animation -->
+    <div class="cricket-anim">
+        <div class="ball">🏏</div>
+    </div>
+
+    <h1>Cricket Shot Analysis 🏏</h1>
+    <div class="sub">Impact frame • Pose • Weight transfer • Shot understanding</div>
+
+    <div class="anim-banner">
+        🏟️ Impact Frame Detected – Generating Coaching Insights...
+    </div>
+
+    <!-- Rating + encouragement -->
+    <div style="text-align:center; margin-top:6px;">
+        <strong>{{ rating_label }}</strong><br>
+        <span>{{ encouragement }}</span>
+    </div>
+
+    <!-- Image with pose -->
+    <img src="{{ image_url }}" alt="Analyzed Impact Frame">
+
+    <!-- Weight transfer -->
+    <div class="weight-section">
+        <h2>Weight Transfer</h2>
+        <div class="bar">
+            <div class="backseg" style="width: {{ back_pct }}%;"></div>
+            <div class="frontseg" style="width: {{ forward_pct }}%;"></div>
+        </div>
+        <p style="margin-top:4px;">
+            Back foot: <b>{{ back_pct }}%</b> &nbsp;|&nbsp;
+            Front foot: <b>{{ forward_pct }}%</b>
+        </p>
+    </div>
+
+    <!-- Mistakes / corrections -->
+    {% if mistakes %}
+    <h3>Things to Improve</h3>
+    <ul>
+        {% for m in mistakes %}
+            <li>{{ m }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <!-- Shot intelligence -->
+    <h2 style="margin-top:24px;">Shot Intelligence 🧠</h2>
+    <p><strong>Detected Shot:</strong> {{ shot_name }}</p>
+
+    <!-- NEW: Shot correction dropdown (DB-based) -->
+    <form action="{{ url_for('update_shot') }}" method="POST" class="shot-select">
+        <label><strong>Is this the correct shot?</strong></label><br>
+        <select name="correct_shot">
+            {% for s in all_shots %}
+                <option value="{{ s }}" {% if s == current_shot %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+        </select>
+        <input type="hidden" name="image_url" value="{{ image_url }}">
+        <button type="submit">✔ Update Shot Information</button>
+    </form>
+
+    <p><strong>Summary:</strong> {{ shot_summary }}</p>
+    <p><strong>Primary Ground Placement:</strong> {{ field_suggestion }}</p>
+
+    <h3>Variations You Can Practise</h3>
+    <ul>
+        {% for v in variations %}
+            <li>{{ v }}</li>
+        {% endfor %}
+    </ul>
+
+    <p><strong>Players Who Master This Shot:</strong> {{ master_player }}</p>
+    <p><strong>History:</strong> {{ shot_history }}</p>
+    <p><strong>Core Improvement Tip:</strong> {{ improvement_summary }}</p>
+
+    <!-- Advanced field suggestions -->
+    <h2 style="margin-top:24px;">Advanced Direction & Field Placement 🎯</h2>
+
+    <h3>Safe Ground Placements (low risk scoring)</h3>
+    <ul>
+        {% for s in alt_safe %}
+            <li>{{ s }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Aggressive Boundary Options (power scoring)</h3>
+    <ul>
+        {% for s in alt_aggressive %}
+            <li>{{ s }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Final feedback -->
+    <h2 style="margin-top:24px;">Final 5 Coaching Feedback Points 📝</h2>
+    <ul>
+        {% for f in final_feedback %}
+            <li>{{ f }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('index') }}" class="back-link">⟵ Analyze another shot</a>
+
+</div>
+</div>
+</body>
+</html>

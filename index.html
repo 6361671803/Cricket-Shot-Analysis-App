@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cricket Shot Analyzer – Impact Photo</title>
+<style>
+body {
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #179957 0%, #04311d 40%, #020b08 100%);
+    font-family: system-ui, sans-serif;
+    color: #fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:25px;
+}
+.card {
+    width:100%;
+    max-width: 720px;
+    background: rgba(0,0,0,0.55);
+    padding: 26px;
+    border-radius: 22px;
+    box-shadow:0 18px 40px rgba(0,0,0,0.7);
+}
+h1 { text-align:center; margin-bottom:6px; font-size:2.1rem; }
+.subtitle {
+    text-align:center; font-size:0.95rem; opacity:0.85; margin-bottom:10px;
+}
+.anim-title {
+    text-align:center;
+    margin-bottom:10px;
+    font-size:1.1rem;
+    animation:pulse 1.7s infinite;
+}
+@keyframes pulse {
+    0%{transform:scale(1);}
+    50%{transform:scale(1.05);}
+    100%{transform:scale(1);}
+}
+label { margin-top:15px; display:block; font-size:0.9rem; }
+input[type="file"] { margin-top:8px; }
+select {
+    width:100%; margin-top: 8px; padding:10px;
+    border-radius:10px; background:rgba(255,255,255,0.12);
+    color:white; border:none; font-size:0.95rem;
+}
+button {
+    display:block; width:100%; margin-top:18px; padding:12px;
+    border-radius:999px; border:none; cursor:pointer;
+    background: linear-gradient(135deg, #ffc400, #ff6d00);
+    font-size:1rem; font-weight:600; color:#1b1b1b;
+}
+.cam-btn {
+    margin-top:12px; width:100%; padding:10px; border-radius:10px;
+    background:#26c6da; border:none; cursor:pointer; font-weight:600;
+    color:#021018;
+}
+#cameraWrapper { margin-top:14px; display:none; }
+video, canvas {
+    width:100%; border-radius:14px; margin-top:10px;
+    border:2px solid rgba(255,255,255,0.4);
+}
+</style>
+</head>
+<body>
+<div class="card">
+
+    <h1>Cricket Shot Analyzer 🏏</h1>
+    <p class="subtitle">Upload or capture the <strong>impact frame</strong> when the bat meets the ball.</p>
+
+    <div class="anim-title">
+        🏟️ AI Batting Coach – Pose • Weight Transfer • Shot Intelligence
+    </div>
+
+    <form action="{{ url_for('analyze') }}" method="POST" enctype="multipart/form-data">
+
+        <!-- Upload from device -->
+        <label>Select impact photo (jpg / jpeg / png / webp):</label>
+        <input type="file" name="image" accept="image/*" id="fileInput">
+
+        <!-- Camera capture -->
+        <button type="button" class="cam-btn" onclick="openCamera()">📸 Use Camera</button>
+
+        <div id="cameraWrapper">
+            <video id="video" autoplay></video>
+            <canvas id="canvas" style="display:none;"></canvas>
+            <button type="button" class="cam-btn" onclick="capturePhoto()">📍 Capture This Frame</button>
+        </div>
+
+        <input type="hidden" name="image_from_camera" id="cameraData">
+
+        <!-- Camera angle -->
+        <label>Select camera angle:</label>
+        <select name="angle" required>
+            <option value="">-- Select Angle --</option>
+            <option value="A">Side View (profile)</option>
+            <option value="B">Front View (bowler-end)</option>
+            <option value="C">Diagonal / 45° View</option>
+        </select>
+
+        <button type="submit">Analyze Shot</button>
+    </form>
+
+</div>
+
+<script>
+let stream;
+function openCamera() {
+    document.getElementById("cameraWrapper").style.display = "block";
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(s => { stream = s; document.getElementById("video").srcObject = s; })
+        .catch(() => alert("Camera permission denied"));
+}
+function capturePhoto() {
+    let video = document.getElementById("video");
+    let canvas = document.getElementById("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext("2d").drawImage(video, 0, 0);
+    let data = canvas.toDataURL("image/jpeg");
+    document.getElementById("cameraData").value = data;
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    alert("📌 Impact photo captured! Now click 'Analyze Shot'");
+}
+</script>
+
+</body>
+</html>
