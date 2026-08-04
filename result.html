@@ -101,6 +101,42 @@ ul { margin-left:22px; margin-top:6px; }
     color:#1b1b1b;
     font-weight:600;
 }
+
+/* ---- advanced analysis sections ---- */
+.muted { opacity:0.8; font-size:0.92rem; margin-top:4px; }
+.pill {
+    display:inline-block; margin-left:8px; padding:2px 10px;
+    border-radius:999px; background:#ffc400; color:#1b1b1b;
+    font-size:0.8rem; font-weight:700;
+}
+.grid {
+    display:grid; gap:10px; margin-top:10px;
+    grid-template-columns:repeat(auto-fit, minmax(165px, 1fr));
+}
+.tile {
+    background:rgba(255,255,255,0.08); border-radius:14px; padding:10px 12px;
+}
+.tile .k { font-size:0.78rem; opacity:0.75; text-transform:uppercase; letter-spacing:0.4px; }
+.tile .v { font-size:1.25rem; font-weight:700; margin-top:2px; }
+.tile .b { font-size:0.78rem; opacity:0.8; }
+.score-bar {
+    margin-top:6px; height:8px; border-radius:999px; overflow:hidden;
+    background:rgba(255,255,255,0.16);
+}
+.score-bar span { display:block; height:100%; background:linear-gradient(90deg,#7fe07f,#ffc400); }
+table.metrics { width:100%; border-collapse:collapse; margin-top:10px; font-size:0.9rem; }
+table.metrics th, table.metrics td {
+    text-align:left; padding:6px 8px; border-bottom:1px solid rgba(255,255,255,0.14);
+}
+table.metrics th { opacity:0.8; font-weight:600; }
+.cols { display:grid; gap:16px; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); }
+.actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; }
+.actions a {
+    padding:10px 16px; border-radius:999px; text-decoration:none; font-weight:600;
+    background:linear-gradient(135deg,#ffc400,#ff6d00); color:#1b1b1b;
+}
+.actions a.secondary { background:rgba(255,255,255,0.16); color:#fff; }
+video.annotated { width:100%; border-radius:18px; margin-top:12px; border:2px solid rgba(255,255,255,0.5); }
 </style>
 </head>
 <body>
@@ -153,7 +189,15 @@ ul { margin-left:22px; margin-top:6px; }
 
     <!-- Shot intelligence -->
     <h2 style="margin-top:24px;">Shot Intelligence 🧠</h2>
-    <p><strong>Detected Shot:</strong> {{ shot_name }}</p>
+    <p><strong>Detected Shot:</strong> {{ shot_name }}
+        {% if confidence %}<span class="pill">{{ confidence }}% confidence</span>{% endif %}
+    </p>
+    {% if shot_reason %}<p class="muted">{{ shot_reason }}</p>{% endif %}
+    {% if shot_alternatives %}
+    <p class="muted">Other possibilities:
+        {% for name, pct in shot_alternatives %}{{ name }} ({{ pct }}%){% if not loop.last %} • {% endif %}{% endfor %}
+    </p>
+    {% endif %}
 
     <!-- NEW: Shot correction dropdown (DB-based) -->
     <form action="{{ url_for('update_shot') }}" method="POST" class="shot-select">
@@ -164,6 +208,7 @@ ul { margin-left:22px; margin-top:6px; }
             {% endfor %}
         </select>
         <input type="hidden" name="image_url" value="{{ image_url }}">
+        <input type="hidden" name="analysis_id" value="{{ analysis_id }}">
         <button type="submit">✔ Update Shot Information</button>
     </form>
 
@@ -205,6 +250,100 @@ ul { margin-left:22px; margin-top:6px; }
             <li>{{ f }}</li>
         {% endfor %}
     </ul>
+
+    <!-- ============ Advanced analysis (new engine) ============ -->
+    {% if scores %}
+    <h2 style="margin-top:26px;">Technique Scores 📊</h2>
+    <div class="grid">
+        {% for key, value in scores.items() %}
+        <div class="tile">
+            <div class="k">{{ key.replace('_', ' ').title() }}</div>
+            <div class="v">{{ value }}<span style="font-size:0.8rem; opacity:0.6;">/100</span></div>
+            <div class="b">{{ score_bands.get(key, '') }}</div>
+            <div class="score-bar"><span style="width: {{ value }}%;"></span></div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if impact %}
+    <h2 style="margin-top:26px;">Impact Frame ⚡</h2>
+    <p class="muted">{{ impact.reason }}</p>
+    <div class="grid">
+        <div class="tile"><div class="k">Frame number</div><div class="v">{{ impact.frame_index }}</div></div>
+        <div class="tile"><div class="k">Timestamp</div><div class="v">{{ '%.2f'|format(impact.timestamp) }}s</div></div>
+        <div class="tile"><div class="k">Bat speed</div><div class="v">{{ '%.0f'|format(impact.bat_speed_kmh) }}<span style="font-size:0.8rem;"> km/h</span></div></div>
+        <div class="tile"><div class="k">Ball speed</div><div class="v">{{ '%.0f'|format(impact.ball_speed_kmh) }}<span style="font-size:0.8rem;"> km/h</span></div></div>
+        <div class="tile"><div class="k">Contact quality</div><div class="v" style="font-size:1rem;">{{ impact.contact_quality }}</div><div class="b">{{ '%.0f'|format(impact.contact_quality_score) }}/100</div></div>
+        <div class="tile"><div class="k">Impact position</div><div class="v" style="font-size:1rem;">{{ impact.impact_position }}</div></div>
+    </div>
+    {% endif %}
+
+    {% if weight %}
+    <h2 style="margin-top:26px;">Weight Transfer Detail ⚖️</h2>
+    <p><strong>{{ weight.label }}</strong> • {{ weight.timing_label }} • {{ weight.quality_label }}</p>
+    {% if weight.notes %}
+    <ul>{% for n in weight.notes %}<li>{{ n }}</li>{% endfor %}</ul>
+    {% endif %}
+    {% if graph_url %}<img src="{{ graph_url }}" alt="Weight transfer movement graph">{% endif %}
+    {% endif %}
+
+    {% if video_url %}
+    <h2 style="margin-top:26px;">Annotated Video 🎥</h2>
+    <video class="annotated" src="{{ video_url }}" controls loop muted></video>
+    {% endif %}
+
+    {% if coaching %}
+    <h2 style="margin-top:26px;">AI Coaching 🧑‍🏫</h2>
+    <div class="cols">
+        {% if coaching.strengths %}
+        <div><h3>Strengths</h3><ul>{% for s in coaching.strengths %}<li>{{ s }}</li>{% endfor %}</ul></div>
+        {% endif %}
+        {% if coaching.weaknesses %}
+        <div><h3>Weaknesses</h3><ul>{% for s in coaching.weaknesses %}<li>{{ s }}</li>{% endfor %}</ul></div>
+        {% endif %}
+        {% if coaching.cues %}
+        <div><h3>Coaching Cues</h3><ul>{% for s in coaching.cues %}<li>{{ s }}</li>{% endfor %}</ul></div>
+        {% endif %}
+        {% if coaching.drills %}
+        <div><h3>Practice Drills</h3><ul>{% for s in coaching.drills %}<li>{{ s }}</li>{% endfor %}</ul></div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if comparison and comparison.rows %}
+    <h2 style="margin-top:26px;">Compare With {{ comparison.player }} 🥇</h2>
+    <p class="muted">{{ comparison.style }} — overall match <b>{{ comparison.match_pct }}%</b></p>
+    <table class="metrics">
+        <tr><th>Metric</th><th>You</th><th>{{ comparison.player }}</th><th>Gap</th><th>Verdict</th></tr>
+        {% for row in comparison.rows %}
+        <tr><td>{{ row.metric }}</td><td>{{ row.you }}</td><td>{{ row.pro }}</td><td>{{ row.delta }}</td><td>{{ row.verdict }}</td></tr>
+        {% endfor %}
+    </table>
+    {% if comparison.not_measured %}
+    <p class="muted">Not compared (needs a video of the swing):
+        {{ comparison.not_measured|join(', ') }}.</p>
+    {% endif %}
+    {% endif %}
+
+    {% if metric_rows %}
+    <h2 style="margin-top:26px;">Technical Metrics 📐</h2>
+    <table class="metrics">
+        <tr><th>Metric</th><th>Value</th></tr>
+        {% for row in metric_rows %}
+        <tr><td>{{ row.label }}</td><td>{{ row.value }}</td></tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    {% if analysis_id %}
+    <div class="actions">
+        <a href="{{ report_url }}">⬇ Download PDF report</a>
+        <a class="secondary" href="{{ url_for('api_analysis', analysis_id=analysis_id) }}">View raw JSON</a>
+        <a class="secondary" href="{{ url_for('live') }}">🎥 Live camera analysis</a>
+    </div>
+    <p class="muted">{{ frames_analysed }} frame(s) analysed{% if source == 'video' %} at {{ fps }} fps{% endif %}.</p>
+    {% endif %}
 
     <a href="{{ url_for('index') }}" class="back-link">⟵ Analyze another shot</a>
 
