@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Live Shot Analysis</title>
+<style>
+body {
+    min-height:100vh;
+    background: radial-gradient(circle at top, #179957 0%, #04311d 40%, #020b08 100%);
+    font-family: system-ui, sans-serif; color:#fff; padding:25px;
+    display:flex; justify-content:center;
+}
+.wrap { width:100%; max-width:1100px; }
+.card {
+    background:rgba(0,0,0,0.55); border-radius:22px; padding:24px;
+    box-shadow:0 18px 40px rgba(0,0,0,0.8);
+}
+h1 { text-align:center; margin-bottom:6px; font-size:2rem; }
+.sub { text-align:center; font-size:0.95rem; opacity:0.86; margin-bottom:14px; }
+.feed { display:grid; gap:16px; grid-template-columns:minmax(280px, 1.4fr) minmax(240px, 1fr); }
+@media (max-width: 780px) { .feed { grid-template-columns:1fr; } }
+img#stream { width:100%; border-radius:18px; border:2px solid rgba(255,255,255,0.45); background:#000; }
+.tile { background:rgba(255,255,255,0.08); border-radius:14px; padding:10px 12px; margin-bottom:8px; }
+.tile .k { font-size:0.74rem; opacity:0.75; text-transform:uppercase; letter-spacing:0.4px; }
+.tile .v { font-size:1.15rem; font-weight:700; }
+.row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.controls { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; align-items:center; }
+select, button, a.btn {
+    padding:10px 16px; border-radius:999px; border:none; cursor:pointer; font-weight:600;
+    background:linear-gradient(135deg,#ffc400,#ff6d00); color:#1b1b1b; text-decoration:none;
+}
+select { background:rgba(255,255,255,0.14); color:#fff; }
+button.secondary, a.btn.secondary { background:rgba(255,255,255,0.16); color:#fff; }
+#error { color:#ffb4a2; margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="card">
+    <h1>Live Shot Analysis 🎥</h1>
+    <div class="sub">Webcam / USB camera • continuous pose, bat &amp; ball tracking • live coaching metrics</div>
+
+    <div class="feed">
+        <div>
+            <img id="stream" src="{{ url_for('live_stream', source=source, angle=angle) }}" alt="Live analysis feed">
+            <div id="error"></div>
+        </div>
+        <div id="metrics">
+            <div class="tile"><div class="k">Shot</div><div class="v" id="m-shot">–</div><div class="k" id="m-reason"></div></div>
+            <div class="row">
+                <div class="tile"><div class="k">Confidence</div><div class="v" id="m-confidence">–</div></div>
+                <div class="tile"><div class="k">FPS</div><div class="v" id="m-fps">–</div></div>
+            </div>
+            <div class="row">
+                <div class="tile"><div class="k">Weight transfer</div><div class="v" id="m-weight">–</div></div>
+                <div class="tile"><div class="k">Head stability</div><div class="v" id="m-head">–</div></div>
+            </div>
+            <div class="row">
+                <div class="tile"><div class="k">Bat angle</div><div class="v" id="m-bat">–</div></div>
+                <div class="tile"><div class="k">Backlift angle</div><div class="v" id="m-backlift">–</div></div>
+            </div>
+            <div class="row">
+                <div class="tile"><div class="k">Front foot angle</div><div class="v" id="m-foot">–</div></div>
+                <div class="tile"><div class="k">Swing speed</div><div class="v" id="m-swing">–</div></div>
+            </div>
+            <div class="row">
+                <div class="tile"><div class="k">Impact prediction</div><div class="v" id="m-impact">–</div></div>
+                <div class="tile"><div class="k">Timing</div><div class="v" id="m-timing">–</div></div>
+            </div>
+            <div class="tile"><div class="k">Footwork quality</div><div class="v" id="m-footwork">–</div></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <label>Camera
+            <select id="source">
+                <option value="0" {% if source == '0' %}selected{% endif %}>0 – built-in webcam</option>
+                <option value="1" {% if source == '1' %}selected{% endif %}>1 – USB camera</option>
+                <option value="2" {% if source == '2' %}selected{% endif %}>2 – second USB camera</option>
+            </select>
+        </label>
+        <label>Angle
+            <select id="angle">
+                <option value="A" {% if angle == 'A' %}selected{% endif %}>Side view</option>
+                <option value="B" {% if angle == 'B' %}selected{% endif %}>Front view</option>
+                <option value="C" {% if angle == 'C' %}selected{% endif %}>Diagonal / 45°</option>
+            </select>
+        </label>
+        <button onclick="restart()">↻ Restart feed</button>
+        <button class="secondary" onclick="stopFeed()">■ Stop camera</button>
+        <a class="btn secondary" href="{{ url_for('index') }}">⟵ Photo analysis</a>
+    </div>
+</div>
+</div>
+
+<script>
+function params() {
+    return "source=" + encodeURIComponent(document.getElementById("source").value) +
+           "&angle=" + encodeURIComponent(document.getElementById("angle").value);
+}
+function set(id, value) { document.getElementById(id).textContent = value; }
+
+async function poll() {
+    try {
+        const response = await fetch("/live/metrics?" + params(), { cache: "no-store" });
+        const m = await response.json();
+        if (m.status === "error") {
+            document.getElementById("error").textContent = m.message || "Camera unavailable.";
+            return;
+        }
+        document.getElementById("error").textContent = "";
+        set("m-shot", m.shot || "–");
+        set("m-reason", m.reason || "");
+        set("m-confidence", Math.round(m.confidence || 0) + "%");
+        set("m-fps", (m.fps || 0).toFixed(1));
+        set("m-weight", Math.round(m.forward_pct || 0) + "% front");
+        set("m-head", Math.round(m.head_stability || 0) + "/100");
+        set("m-bat", Math.round(m.bat_angle_deg || 0) + "°");
+        set("m-backlift", Math.round(m.backlift_angle_deg || 0) + "°");
+        set("m-foot", Math.round(m.front_foot_angle_deg || 0) + "°");
+        set("m-swing", Math.round(m.swing_speed_kmh || 0) + " km/h");
+        set("m-impact", m.impact_prediction || "–");
+        set("m-timing", m.timing || "–");
+        set("m-footwork", m.footwork_quality || "–");
+    } catch (err) {
+        document.getElementById("error").textContent = "Lost connection to the analysis feed.";
+    }
+}
+function restart() {
+    document.getElementById("stream").src = "/live/stream?" + params() + "&t=" + Date.now();
+}
+async function stopFeed() {
+    await fetch("/live/stop?" + params(), { method: "POST" });
+    document.getElementById("stream").removeAttribute("src");
+}
+setInterval(poll, 400);
+poll();
+</script>
+</body>
+</html>

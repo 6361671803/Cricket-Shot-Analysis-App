@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Pose models are downloaded on first run (see analysis_engine/pose/estimator.py)
+models/*.task
+
+# Generated analysis artefacts
+static/uploads/
+static/outputs/

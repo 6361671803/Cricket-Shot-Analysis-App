@@ -420,5 +420,164 @@
       "Avoid throwing your bat too hard at the ball.",
       "Use this shot mainly when there is no third man."
     ]
+  },
+  "Forward Defence": {
+    "summary": "A front-foot defensive stroke that smothers the ball under the eyes with soft hands.",
+    "fields": "No placement intended — the ball drops in front of the batter.",
+    "variations": [
+      "Soft-handed block",
+      "Forward press defence",
+      "Kill-the-ball defence"
+    ],
+    "masters": "Rahul Dravid, Cheteshwar Pujara, Joe Root",
+    "history": "The foundation stroke of Test batting, built to survive good bowling on tough pitches.",
+    "improve": "Stride to the pitch of the ball, bat and pad together, head over the ball.",
+    "alt_safe": [
+      "Leave the ball outside off",
+      "Drop and run",
+      "Straight-bat block to mid-off"
+    ],
+    "alt_aggressive": [
+      "Convert to a straight drive when the ball is full",
+      "Push into the covers for one"
+    ],
+    "final_feedback": [
+      "Get your front foot as close to the pitch of the ball as possible.",
+      "Keep the bat face straight and angled slightly down.",
+      "Play with soft hands so the ball drops dead.",
+      "Keep your head still and over the line of the ball.",
+      "Avoid pushing hard at the ball — let it come to you."
+    ]
+  },
+  "Back Foot Defence": {
+    "summary": "A back-foot defensive stroke played from a high bat, letting the ball come to the body.",
+    "fields": "No placement intended — the ball is killed in front of the stumps.",
+    "variations": [
+      "High-elbow back-foot block",
+      "Drop-and-run defence",
+      "Dead-bat defence"
+    ],
+    "masters": "Rahul Dravid, Kane Williamson, Steve Smith",
+    "history": "Essential against pace and bounce; the stroke that survives short-of-length bowling.",
+    "improve": "Move back and across, stay tall, keep the bat coming down straight.",
+    "alt_safe": [
+      "Drop the ball at your feet",
+      "Leave anything rising over the stumps"
+    ],
+    "alt_aggressive": [
+      "Punch off the back foot through the covers when the ball sits up"
+    ],
+    "final_feedback": [
+      "Move back and across towards the line of the ball.",
+      "Stay tall — don't crouch as the ball arrives.",
+      "Keep the top hand in control with a high front elbow.",
+      "Play the ball late, under your eyes.",
+      "Relax the bottom hand so the ball drops safely."
+    ]
+  },
+  "Cut Shot": {
+    "summary": "A back-foot stroke that cuts a short, wide ball square or behind square on the off side.",
+    "fields": "Point, backward point and third-man region.",
+    "variations": [
+      "Square cut",
+      "Late cut",
+      "Upper cut"
+    ],
+    "masters": "Virender Sehwag, Brian Lara, Rohit Sharma",
+    "history": "A classic square-of-the-wicket run scorer, especially productive on bouncy pitches.",
+    "improve": "Wait for width, get on top of the ball and roll the wrists at contact.",
+    "alt_safe": [
+      "Steer to third man for one",
+      "Drop the wrists and leave the wide ball"
+    ],
+    "alt_aggressive": [
+      "Slash hard through point",
+      "Upper cut over the slips"
+    ],
+    "final_feedback": [
+      "Only cut the ball that is short and wide enough.",
+      "Transfer weight onto the back foot and give yourself room.",
+      "Get on top of the bounce and hit down on the ball.",
+      "Roll your wrists at contact to keep it on the ground.",
+      "Watch the ball onto the bat — cut late, not early."
+    ]
+  },
+  "Glance": {
+    "summary": "A deflection off the hips that glances the ball fine on the leg side using the pace of the delivery.",
+    "fields": "Fine leg, backward square leg and long leg.",
+    "variations": [
+      "Leg glance off the front foot",
+      "Back-foot glance",
+      "Hip deflection"
+    ],
+    "masters": "Ranjitsinhji, Kumar Sangakkara, Babar Azam",
+    "history": "Popularised by Ranjitsinhji, the leg glance is the original wristy deflection stroke.",
+    "improve": "Get inside the line, use soft hands and let the ball do the work.",
+    "alt_safe": [
+      "Deflect to fine leg for one",
+      "Work square for an easy single"
+    ],
+    "alt_aggressive": [
+      "Flick fine for four when the field is up"
+    ],
+    "final_feedback": [
+      "Get your body inside the line of the ball.",
+      "Angle the bat face rather than swinging at the ball.",
+      "Use the pace of the delivery instead of adding your own power.",
+      "Keep your head steady through the deflection.",
+      "Play the ball late, beside your hip."
+    ]
+  },
+  "Ramp Shot": {
+    "summary": "An improvised stroke that ramps a short ball over the keeper or slips using an angled bat face.",
+    "fields": "Third man, fine leg and the vacant area behind the keeper.",
+    "variations": [
+      "Ramp over the keeper",
+      "Scoop over fine leg",
+      "Open-faced ramp to third man"
+    ],
+    "masters": "AB de Villiers, Jos Buttler, Tilak Varma",
+    "history": "A modern T20 innovation designed to attack the empty area behind the wicket.",
+    "improve": "Get low and inside the line, present an open face and guide rather than hit.",
+    "alt_safe": [
+      "Duck or sway away from the short ball"
+    ],
+    "alt_aggressive": [
+      "Ramp over the keeper for six",
+      "Scoop over short fine leg"
+    ],
+    "final_feedback": [
+      "Only ramp when the field behind the wicket is empty.",
+      "Get low and inside the line to stay safe.",
+      "Angle the bat face — don't swing at the ball.",
+      "Keep your eyes on the ball all the way onto the bat.",
+      "Practise this with soft balls first; it is a high-risk stroke."
+    ]
+  },
+  "Switch Hit": {
+    "summary": "A stroke where the batter swaps hands and stance before contact to hit the ball as the opposite-handed batter.",
+    "fields": "Reverse of the normal field — usually the vacant off-side boundary.",
+    "variations": [
+      "Full switch hit",
+      "Reverse sweep hybrid",
+      "Switch loft over cover"
+    ],
+    "masters": "Kevin Pietersen, David Warner, Glenn Maxwell",
+    "history": "Made famous by Kevin Pietersen in 2008 and now a staple of T20 power hitting.",
+    "improve": "Complete the switch early, keep the head still and swing through the line.",
+    "alt_safe": [
+      "Abort the switch and defend normally"
+    ],
+    "alt_aggressive": [
+      "Switch loft over extra cover",
+      "Switch slog over the reverse boundary"
+    ],
+    "final_feedback": [
+      "Switch your grip and stance before the ball is released, not during the swing.",
+      "Keep your head still even though your stance has changed.",
+      "Swing through the line of the ball with the top hand in control.",
+      "Only attempt it against slower bowlers until it is grooved.",
+      "Practise the movement in the nets before using it in a match."
+    ]
   }
 }
