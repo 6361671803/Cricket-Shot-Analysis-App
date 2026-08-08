@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cricket Shot Analyzer</title>
+<style>
+  :root {
+    --primary: #1a7a4c;
+    --primary-dark: #145c3a;
+    --primary-light: #e6f3ec;
+    --bg: #f5f6f4;
+    --card: #ffffff;
+    --text: #1c2620;
+    --text-muted: #5b675f;
+    --border: #dfe4e0;
+    --danger-bg: #fdeceb;
+    --danger-border: #e8a29a;
+    --danger-text: #8a2e24;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+  }
+  header.app-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  header.app-header .logo {
+    font-size: 1.8rem;
+  }
+  header.app-header h1 {
+    font-size: 1.25rem;
+    margin: 0;
+  }
+  header.app-header p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+    align-items: start;
+  }
+  @media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+  aside.sidebar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    position: sticky;
+    top: 20px;
+  }
+  aside.sidebar h2 {
+    font-size: 0.95rem;
+    margin: 0 0 12px;
+  }
+  aside.sidebar label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 14px;
+  }
+  aside.sidebar input[type=text] {
+    width: 100%;
+    margin-top: 6px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font: inherit;
+  }
+  .mode-toggle {
+    display: flex;
+    margin-top: 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .mode-btn {
+    flex: 1;
+    padding: 8px 0;
+    border: 0;
+    background: var(--card);
+    color: var(--text);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.85rem;
+  }
+  .mode-btn.active {
+    background: var(--primary);
+    color: #fff;
+  }
+  #demoBtn {
+    width: 100%;
+    margin-top: 18px;
+    padding: 10px;
+    border-radius: 999px;
+    border: 1px solid var(--primary);
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #demoStatus {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    min-height: 1.2em;
+    margin-top: 6px;
+  }
+  main.content {
+    min-width: 0;
+  }
+  .error-banner {
+    background: var(--danger-bg);
+    border: 1px solid var(--danger-border);
+    color: var(--danger-text);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+  }
+  nav.tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 10px 16px;
+    border: 0;
+    background: transparent;
+    color: var(--text-muted);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+  }
+  .tab-btn.active {
+    color: var(--primary-dark);
+    border-bottom-color: var(--primary);
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .helper { font-size: 0.82rem; color: var(--text-muted); margin-top: 6px; }
+  label.field-label { display: block; font-weight: 600; margin-top: 16px; font-size: 0.9rem; }
+  input[type=file], input[type=number], select {
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font: inherit;
+    background: #fff;
+  }
+  #previewWrap, #cameraWrapper { margin-top: 12px; display: none; }
+  #previewWrap img, #cameraWrapper video {
+    width: 100%;
+    max-height: 320px;
+    object-fit: contain;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  button.btn {
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+  }
+  button.btn-primary { background: var(--primary); color: #fff; }
+  button.btn-secondary { background: #eef1ef; color: var(--text); margin-left: 8px; }
+  #submitBtn { margin-top: 18px; }
+  details.calibration {
+    margin-top: 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+  details.calibration summary { cursor: pointer; font-weight: 600; font-size: 0.9rem; }
+  #calibPreview { font-weight: 600; color: var(--primary-dark); }
+  .spinner-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+  .spinner {
+    width: 20px; height: 20px;
+    border: 3px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .form-error { color: var(--danger-text); font-size: 0.85rem; margin-top: 8px; }
+
+  #resultsContainer { margin-top: 24px; }
+  #resultsContainer .card { margin-top: 16px; }
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+  .badge-neutral { background: var(--primary-light); color: var(--primary-dark); }
+  .badge-ml { background: var(--primary); color: #fff; }
+  .badge-llm { background: #2f6fb0; color: #fff; }
+  .reasoning-note { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+  .result-img { width: 100%; border-radius: 12px; margin-top: 12px; border: 1px solid var(--border); }
+  .weight-bar {
+    margin-top: 8px;
+    width: 100%;
+    height: 22px;
+    border-radius: 999px;
+    display: flex;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .weight-bar .back { background: #b9c2bd; }
+  .weight-bar .front { background: var(--primary); }
+  .timeline-wrap { position: relative; margin-top: 10px; }
+  #timelineCanvas {
+    width: 100%; height: 170px; display: block;
+    background: var(--primary-light); border-radius: 12px; border: 1px solid var(--border);
+  }
+  .timeline-tooltip {
+    position: absolute;
+    display: none;
+    background: var(--text);
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 6px;
+    transform: translate(-50%, -100%);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .phase-ticks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; font-size: 0.78rem; }
+  .phase-ticks span { background: var(--primary-light); color: var(--primary-dark); padding: 3px 9px; border-radius: 999px; }
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-top: 10px; }
+  .metric-tile { background: var(--primary-light); border-radius: 10px; padding: 10px 12px; }
+  .metric-tile .label { font-size: 0.72rem; color: var(--text-muted); }
+  .metric-tile .value { font-size: 1.1rem; font-weight: 700; color: var(--primary-dark); }
+  details.advanced { margin-top: 16px; }
+  details.advanced pre { background: #f0f1ef; padding: 10px; border-radius: 8px; overflow-x: auto; font-size: 0.75rem; }
+
+  .shot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+  .shot-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+  .shot-card h3 { margin: 0 0 6px; font-size: 1rem; }
+  .shot-card p { margin: 4px 0; font-size: 0.85rem; }
+  .shot-meta { color: var(--text-muted); }
+
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+  ul.plain { margin: 8px 0 0 20px; padding: 0; }
+
+  .biomech-list { list-style: none; margin: 10px 0 0; padding: 0; }
+  .biomech-list li { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+  .status-within { color: #1a7a4c; font-weight: 600; }
+  .status-under { color: #2f6fb0; font-weight: 600; }
+  .status-over { color: #c98b1f; font-weight: 600; }
+  .status-unavailable { color: var(--text-muted); }
+  .archetype-note { font-size: 0.8rem; color: var(--text-muted); }
+
+  .history-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+  .history-table th, .history-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  .strongest-weakest { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
+  .strongest-weakest .metric-tile { flex: 1; min-width: 160px; }
+
+  .wagon-wrap { display: flex; justify-content: center; margin-top: 12px; }
+  .wagon-caption { text-align: center; font-size: 0.78rem; color: var(--text-muted); margin-top: 6px; }
+
+  .tag-form label.field-label { margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo">🏏</div>
+  <div>
+    <h1>Cricket Shot Analyzer</h1>
+    <p>Pose, weight-transfer, bat/ball tracking, and shot-placement coaching from ordinary video.</p>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h2>Session</h2>
+    <label for="playerName">Player name (optional)</label>
+    <input type="text" id="playerName" maxlength="80" placeholder="e.g. A. Sharma">
+
+    <label>Upload mode</label>
+    <div class="mode-toggle">
+      <button type="button" class="mode-btn active" data-mode="video">Video</button>
+      <button type="button" class="mode-btn" data-mode="photo">Photo</button>
+    </div>
+
+    <button type="button" id="demoBtn">Try demo clip</button>
+    <p id="demoStatus"></p>
+  </aside>
+
+  <main class="content">
+    {% if error %}
+    <div class="error-banner" role="alert">{{ error }}</div>
+    {% endif %}
+
+    <nav class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="analyze" type="button">Analyze</button>
+      <button class="tab-btn" data-tab="biomechanics" type="button">Biomechanics</button>
+      <button class="tab-btn" data-tab="history" type="button">History</button>
+      <button class="tab-btn" data-tab="library" type="button">Shot Library</button>
+    </nav>
+
+    <!-- Analyze tab -->
+    <section id="tab-analyze" class="tab-panel active">
+      <div class="card">
+        <form id="analyzeForm" action="{{ url_for('analyze') }}" method="POST" enctype="multipart/form-data">
+          <label class="field-label" for="fileInput">Shot video or impact photo</label>
+          <input type="file" name="image" id="fileInput" accept=".mp4,.mov,video/mp4,video/quicktime">
+          <p class="helper" id="uploadHelp">
+            Upload a short MP4 or MOV slow-mo clip (max {{ max_upload_mb }}MB).
+          </p>
+          <div id="previewWrap"><img id="preview" alt="Selected photo preview"></div>
+
+          <button type="button" class="btn btn-secondary" id="cameraButton" style="margin-left:0;">Use camera instead</button>
+          <div id="cameraWrapper">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas" hidden></canvas>
+            <button type="button" class="btn btn-secondary" id="captureButton" style="margin-left:0; margin-top:8px;">Capture this frame</button>
+          </div>
+          <input type="hidden" name="image_from_camera" id="cameraData">
+
+          <label class="field-label" for="angle">Camera angle</label>
+          <select name="angle" id="angle" required>
+            <option value="" selected disabled>Select the view used</option>
+            <option value="A">Side view (profile)</option>
+            <option value="B">Front view (bowler end)</option>
+            <option value="C">Diagonal / 45&deg; view</option>
+          </select>
+
+          <details class="calibration">
+            <summary>Optional: calibrate real-world units (video only)</summary>
+            <p class="helper">
+              Measure one known-length reference visible in your clip (e.g. stump height = 71.1cm)
+              in pixels, and enter both values to get bat speed in km/h instead of px/s.
+            </p>
+            <label class="field-label" for="calibPx">Reference length in frame (pixels)</label>
+            <input type="number" min="1" step="any" name="calib_pixel_length" id="calibPx" placeholder="e.g. 240">
+            <label class="field-label" for="calibCm">Real-world length of that reference (cm)</label>
+            <input type="number" min="1" step="any" name="calib_real_cm" id="calibCm" placeholder="e.g. 71.1">
+            <p class="helper" id="calibPreview"></p>
+          </details>
+
+          <button type="submit" class="btn btn-primary" id="submitBtn">Analyze shot</button>
+          <div class="spinner-row" id="spinnerRow" hidden>
+            <div class="spinner"></div>
+            <span>Analyzing your shot...</span>
+          </div>
+          <p class="form-error" id="formError"></p>
+        </form>
+      </div>
+
+      <div id="resultsContainer">
+        <div class="card empty-state" id="emptyState">
+          <p>Upload a slow-mo clip or impact photo above, or try the demo clip in the sidebar, to see pose,
+          weight-transfer, and shot-placement coaching here.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Biomechanics tab -->
+    <section id="tab-biomechanics" class="tab-panel">
+      <div id="biomechanicsContainer">
+        <div class="card empty-state">
+          <p>Analyze a shot on the Analyze tab first - the full biomechanics breakdown for your
+          most recent shot will appear here.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- History tab -->
+    <section id="tab-history" class="tab-panel">
+      <div id="historyContainer">
+        <div class="card empty-state">
+          <p>Loading player history...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Shot Library tab -->
+    <section id="tab-library" class="tab-panel">
+      <div class="shot-grid">
+        {% for name, info in all_shots.items() %}
+        <div class="shot-card">
+          <h3>{{ name }}</h3>
+          <p>{{ info.summary }}</p>
+          <p class="shot-meta"><strong>Fields:</strong> {{ info.fields }}</p>
+          <p class="shot-meta"><strong>Masters:</strong> {{ info.masters }}</p>
+          {% if info.variations %}
+          <p class="shot-meta"><strong>Variations:</strong> {{ info.variations|join(', ') }}</p>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+const maxUploadMb = {{ max_upload_mb }};
+const IMAGE_ACCEPT = ".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp";
+const VIDEO_ACCEPT = ".mp4,.mov,video/mp4,video/quicktime";
+
+const appState = { lastResult: null };
+
+// ---------- Tabs ----------
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+    if (btn.dataset.tab === "history") {
+      loadHistory();
+    }
+  });
+});
+
+// ---------- Upload mode toggle ----------
+const fileInput = document.getElementById("fileInput");
+const uploadHelp = document.getElementById("uploadHelp");
+document.querySelectorAll(".mode-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const mode = btn.dataset.mode;
+    fileInput.accept = mode === "photo" ? IMAGE_ACCEPT : VIDEO_ACCEPT;
+    uploadHelp.textContent = mode === "photo"
+      ? `Upload a JPG, PNG, or WEBP impact photo (max ${maxUploadMb}MB).`
+      : `Upload a short MP4 or MOV slow-mo clip (max ${maxUploadMb}MB).`;
+    fileInput.value = "";
+    previewWrap.style.display = "none";
+  });
+});
+
+// ---------- File preview / camera capture ----------
+const cameraData = document.getElementById("cameraData");
+const previewWrap = document.getElementById("previewWrap");
+const preview = document.getElementById("preview");
+const video = document.getElementById("video");
+const cameraWrapper = document.getElementById("cameraWrapper");
+let stream;
+
+function previewImage(src) {
+  preview.src = src;
+  previewWrap.style.display = "block";
+}
+function stopCamera() {
+  if (stream) stream.getTracks().forEach(t => t.stop());
+  stream = null;
+  cameraWrapper.style.display = "none";
+}
+
+fileInput.addEventListener("change", () => {
+  const file = fileInput.files[0];
+  cameraData.value = "";
+  if (!file) return;
+  if (file.type.startsWith("video")) {
+    previewWrap.style.display = "none";
+  } else {
+    previewImage(URL.createObjectURL(file));
+  }
+});
+
+document.getElementById("cameraButton").addEventListener("click", async () => {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+    video.srcObject = stream;
+    cameraWrapper.style.display = "block";
+  } catch {
+    showFormError("Camera access was unavailable. Upload a photo instead.");
+  }
+});
+
+document.getElementById("captureButton").addEventListener("click", () => {
+  const canvas = document.getElementById("canvas");
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext("2d").drawImage(video, 0, 0);
+  cameraData.value = canvas.toDataURL("image/jpeg", 0.9);
+  fileInput.value = "";
+  previewImage(cameraData.value);
+  stopCamera();
+});
+
+// ---------- Calibration live preview ----------
+const calibPx = document.getElementById("calibPx");
+const calibCm = document.getElementById("calibCm");
+const calibPreview = document.getElementById("calibPreview");
+function updateCalibPreview() {
+  const px = parseFloat(calibPx.value);
+  const cm = parseFloat(calibCm.value);
+  calibPreview.textContent = (px > 0 && cm > 0) ? `≈ ${(cm / px).toFixed(4)} cm/pixel` : "";
+}
+calibPx.addEventListener("input", updateCalibPreview);
+calibCm.addEventListener("input", updateCalibPreview);
+
+// ---------- Form error / spinner helpers ----------
+const formError = document.getElementById("formError");
+const spinnerRow = document.getElementById("spinnerRow");
+const submitBtn = document.getElementById("submitBtn");
+function showFormError(msg) { formError.textContent = msg; }
+function clearFormError() { formError.textContent = ""; }
+
+// ---------- Escaping ----------
+function escapeHtml(value) {
+  const div = document.createElement("div");
+  div.textContent = value == null ? "" : String(value);
+  return div.innerHTML;
+}
+
+// ---------- Analysis submission ----------
+async function submitAnalysis(formData) {
+  spinnerRow.hidden = false;
+  submitBtn.disabled = true;
+  clearFormError();
+  try {
+    const resp = await fetch("{{ url_for('api_analyze') }}", { method: "POST", body: formData });
+    const data = await resp.json();
+    if (!resp.ok) {
+      showFormError(data.error || "Something went wrong.");
+      return;
+    }
+    appState.lastResult = data;
+    renderResults(data);
+  } catch (err) {
+    showFormError("Network error - please try again.");
+  } finally {
+    spinnerRow.hidden = true;
+    submitBtn.disabled = false;
+  }
+}
+
+const analyzeForm = document.getElementById("analyzeForm");
+const playerNameInput = document.getElementById("playerName");
+
+analyzeForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  if (!fileInput.files[0] && !cameraData.value) {
+    showFormError("Select or capture a file first.");
+    return;
+  }
+  const formData = new FormData(analyzeForm);
+  formData.set("player_name", playerNameInput.value || "");
+  if (cameraData.value) {
+    formData.set("image_from_camera", cameraData.value);
+    formData.delete("image");
+  }
+  submitAnalysis(formData);
+});
+
+// ---------- Demo clip ----------
+document.getElementById("demoBtn").addEventListener("click", async () => {
+  const status = document.getElementById("demoStatus");
+  status.textContent = "Loading demo clip...";
+  try {
+    const resp = await fetch("{{ url_for('static', filename='demo/sample_shot.mp4') }}");
+    if (!resp.ok) throw new Error("missing");
+    const blob = await resp.blob();
+    const formData = new FormData();
+    formData.append("image", blob, "sample_shot.mp4");
+    formData.append("angle", "A");
+    formData.append("player_name", playerNameInput.value || "");
+    document.querySelector('.tab-btn[data-tab="analyze"]').click();
+    await submitAnalysis(formData);
+    status.textContent = "";
+  } catch (err) {
+    status.textContent = "Demo clip not configured - add a short clip at static/demo/sample_shot.mp4.";
+  }
+});
+
+// ---------- Weight-transfer timeline (canvas, with hover tooltip) ----------
+function drawTimeline(canvas, series, impactMs) {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  const w = rect.width, h = rect.height, pad = 24;
+  const minT = series[0].t_ms, maxT = series[series.length - 1].t_ms;
+  const spanT = Math.max(1, maxT - minT);
+  const xFor = t => pad + ((t - minT) / spanT) * (w - pad * 2);
+  const yFor = pct => h - pad - (pct / 100) * (h - pad * 2);
+
+  ctx.strokeStyle = "rgba(0,0,0,0.25)";
+  ctx.beginPath();
+  ctx.moveTo(pad, pad); ctx.lineTo(pad, h - pad); ctx.lineTo(w - pad, h - pad);
+  ctx.stroke();
+
+  if (impactMs !== null && impactMs !== undefined) {
+    const ix = xFor(impactMs);
+    ctx.strokeStyle = "rgba(230,110,20,0.85)";
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(ix, pad); ctx.lineTo(ix, h - pad); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  ctx.strokeStyle = "#1a7a4c";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  series.forEach((pt, i) => {
+    const x = xFor(pt.t_ms), y = yFor(pt.forward_pct);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  return { xFor, yFor };
+}
+
+function attachTimelineHover(canvas, series, geometry, tooltipEl) {
+  canvas.addEventListener("mousemove", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    let nearest = series[0], nearestDist = Infinity;
+    series.forEach(pt => {
+      const d = Math.abs(geometry.xFor(pt.t_ms) - mouseX);
+      if (d < nearestDist) { nearestDist = d; nearest = pt; }
+    });
+    tooltipEl.style.display = "block";
+    tooltipEl.style.left = geometry.xFor(nearest.t_ms) + "px";
+    tooltipEl.style.top = Math.max(0, geometry.yFor(nearest.forward_pct) - 28) + "px";
+    tooltipEl.textContent = `${nearest.forward_pct}% front @ ${nearest.t_ms}ms`;
+  });
+  canvas.addEventListener("mouseleave", () => { tooltipEl.style.display = "none"; });
+}
+
+// ---------- Results rendering ----------
+function renderResults(data) {
+  const a = data.analysis;
+  const s = a.shotInfo;
+
+  let html = `<div class="card">`;
+  html += `<h2>${escapeHtml(s.name || "Shot")} ${classificationBadgeHtml(a)}</h2>`;
+  if (a.classificationReasoning) {
+    html += `<p class="reasoning-note">AI reasoning: ${escapeHtml(a.classificationReasoning)}</p>`;
+  }
+  html += `<p><strong>${escapeHtml(a.rating.label)}</strong> - ${escapeHtml(a.rating.encouragement)}</p>`;
+  html += `<img class="result-img" src="${data.imageUrl}" alt="Analyzed frame">`;
+
+  if (data.videoUrl) {
+    html += `<p class="helper" style="margin-top:12px;">Original clip:</p>`;
+    html += `<video class="result-img" src="${data.videoUrl}" controls loop></video>`;
+  }
+
+  html += `<div style="margin-top:16px;">`;
+  html += `<div class="weight-bar"><div class="back" style="width:${a.weightTransfer.backPercent}%;"></div>`;
+  html += `<div class="front" style="width:${a.weightTransfer.forwardPercent}%;"></div></div>`;
+  html += `<p class="helper">Back foot: <b>${a.weightTransfer.backPercent}%</b> &nbsp;|&nbsp; Front foot: <b>${a.weightTransfer.forwardPercent}%</b></p>`;
+  html += `</div>`;
+
+  if (a.mistakes && a.mistakes.length) {
+    html += `<h3>Things to improve</h3><ul class="plain">`;
+    a.mistakes.forEach(m => { html += `<li>${escapeHtml(m)}</li>`; });
+    html += `</ul>`;
+  }
+  html += `</div>`;
+
+  // Shot intelligence + correction
+  html += `<div class="card">`;
+  html += `<h3>Shot Intelligence</h3>`;
+  html += `<p>${escapeHtml(s.summary)}</p>`;
+  html += `<p><strong>Primary ground placement:</strong> ${escapeHtml(s.fieldSuggestion)}</p>`;
+  if (s.variations && s.variations.length) {
+    html += `<p><strong>Variations:</strong> ${s.variations.map(escapeHtml).join(", ")}</p>`;
+  }
+  html += `<p><strong>Players who master this shot:</strong> ${escapeHtml(s.masterPlayer)}</p>`;
+  html += `<p><strong>History:</strong> ${escapeHtml(s.history)}</p>`;
+  html += `<p><strong>Core improvement tip:</strong> ${escapeHtml(s.improvementSummary)}</p>`;
+
+  html += `<form action="{{ url_for('update_shot') }}" method="POST" style="margin-top:12px;">`;
+  html += `<label class="field-label">Is this the correct shot?</label>`;
+  html += `<select name="correct_shot">`;
+  (data.correction.allShots || []).forEach(name => {
+    const selected = name === data.correction.currentShot ? "selected" : "";
+    html += `<option value="${escapeHtml(name)}" ${selected}>${escapeHtml(name)}</option>`;
+  });
+  html += `</select>`;
+  html += `<input type="hidden" name="image_url" value="${escapeHtml(data.imageUrl)}">`;
+  html += `<input type="hidden" name="angle" value="${escapeHtml(data.player.angle)}">`;
+  html += `<input type="hidden" name="forward_pct" value="${a.weightTransfer.forwardPercent}">`;
+  html += `<input type="hidden" name="player_name" value="${escapeHtml(data.player.name)}">`;
+  html += `<button type="submit" class="btn btn-secondary" style="margin-left:0; margin-top:10px;">Fix shot &amp; view full result</button>`;
+  html += `</form>`;
+  html += `</div>`;
+
+  // Timeline (video only)
+  if (a.isVideo && a.phaseMarkers && a.weightTransferSeries && a.weightTransferSeries.length > 1) {
+    html += `<div class="card">`;
+    html += `<h3>Shot Timeline</h3>`;
+    html += `<p class="helper">Front-foot weight % across the swing, with estimated phase boundaries.</p>`;
+    html += `<div class="timeline-wrap"><canvas id="timelineCanvas"></canvas><div class="timeline-tooltip" id="timelineTooltip"></div></div>`;
+    html += `<div class="phase-ticks">`;
+    html += `<span>Stance: ${a.phaseMarkers.stance_ms}ms</span>`;
+    html += `<span>Backlift: ${a.phaseMarkers.backlift_ms}ms</span>`;
+    html += `<span>Downswing: ${a.phaseMarkers.downswing_start_ms}ms</span>`;
+    html += `<span>Impact: ${a.phaseMarkers.impact_ms}ms</span>`;
+    html += `<span>Follow-through: ${a.phaseMarkers.follow_through_start_ms}ms</span>`;
+    html += `</div></div>`;
+  }
+
+  // Bat & ball tracking (video only)
+  if (a.isVideo) {
+    html += `<div class="card"><h3>Bat &amp; Ball Tracking</h3>`;
+    const bm = a.batMetrics;
+    if (bm && bm.available) {
+      html += `<div class="metric-grid">`;
+      html += metricTile("Backlift angle", bm.backlift_angle_deg.toFixed(0) + "°");
+      html += metricTile("Downswing angle", bm.downswing_angle_deg.toFixed(0) + "°");
+      if (bm.bat_speed_px_s != null) {
+        const speedLabel = (a.isCalibrated && bm.bat_speed_kmh != null)
+          ? bm.bat_speed_kmh.toFixed(1) + " km/h"
+          : bm.bat_speed_px_s.toFixed(0) + " px/s (uncalibrated)";
+        html += metricTile("Bat speed at impact", speedLabel);
+      }
+      html += `</div>`;
+    } else {
+      html += `<p class="helper">${escapeHtml((bm && bm.note) || "No bat marker detected in this clip.")}</p>`;
+    }
+
+    const be = a.ballEstimate;
+    html += `<h4 style="margin-top:14px;">Ball line &amp; length</h4>`;
+    if (be && be.available) {
+      html += `<p>${escapeHtml(be.line)} &nbsp;|&nbsp; ${escapeHtml(be.length)}</p>`;
+      html += `<p class="helper">${escapeHtml(be.note)}</p>`;
+    } else {
+      html += `<p class="helper">${escapeHtml((be && be.note) || "Ball wasn't trackable in this clip.")}</p>`;
+    }
+    html += `</div>`;
+  }
+
+  // Biomechanics (Phase 4)
+  html += `<div class="card"><h3>Biomechanics</h3>${biomechanicsHtml(a.biomechanics)}</div>`;
+
+  if (a.finalFeedback && a.finalFeedback.length) {
+    html += `<div class="card"><h3>Final Coaching Feedback</h3><ul class="plain">`;
+    a.finalFeedback.forEach(f => { html += `<li>${escapeHtml(f)}</li>`; });
+    html += `</ul></div>`;
+  }
+
+  // Match-context tagging (Phase 6)
+  if (data.sessionId) {
+    html += `<div class="card"><h3>Tag Match Context (optional)</h3>`;
+    html += `<form action="{{ url_for('tag_shot') }}" method="POST" class="tag-form">`;
+    html += `<input type="hidden" name="session_id" value="${data.sessionId}">`;
+    html += `<label class="field-label">Over number</label><input type="number" name="over_number" min="0" placeholder="e.g. 12">`;
+    html += `<label class="field-label">Bowler type</label><select name="bowler_type"><option value="">Not specified</option><option value="pace">Pace</option><option value="spin">Spin</option></select>`;
+    const prefillLineLength = (a.ballEstimate && a.ballEstimate.available) ? a.ballEstimate.length : "";
+    html += `<label class="field-label">Line/length faced</label><input type="text" name="line_length" value="${escapeHtml(prefillLineLength)}" placeholder="e.g. Good length, off stump">`;
+    html += `<label class="field-label">Runs scored</label><input type="number" name="outcome_runs" min="0" max="6" placeholder="0-6">`;
+    html += `<label class="field-label"><input type="checkbox" name="outcome_dismissal"> Dismissed on this ball</label>`;
+    html += `<button type="submit" class="btn btn-secondary" style="margin-left:0; margin-top:12px;">Save match context</button>`;
+    html += `</form></div>`;
+  }
+
+  html += `<details class="advanced"><summary>Advanced details</summary><pre>${escapeHtml(JSON.stringify(data, null, 2))}</pre></details>`;
+
+  document.getElementById("resultsContainer").innerHTML = html;
+
+  if (a.isVideo && a.phaseMarkers && a.weightTransferSeries && a.weightTransferSeries.length > 1) {
+    const canvas = document.getElementById("timelineCanvas");
+    const tooltip = document.getElementById("timelineTooltip");
+    const geometry = drawTimeline(canvas, a.weightTransferSeries, a.phaseMarkers.impact_ms);
+    attachTimelineHover(canvas, a.weightTransferSeries, geometry, tooltip);
+  }
+
+  renderBiomechanicsTab(data);
+}
+
+function metricTile(label, value) {
+  return `<div class="metric-tile"><div class="label">${escapeHtml(label)}</div><div class="value">${escapeHtml(value)}</div></div>`;
+}
+
+function classificationBadgeHtml(a) {
+  const pct = a.classificationConfidence != null ? ` (${Math.round(a.classificationConfidence * 100)}%)` : "";
+  if (a.classificationMethod === "ml") {
+    return `<span class="badge badge-ml">ML match${pct}</span>`;
+  }
+  if (a.classificationMethod === "llm") {
+    return `<span class="badge badge-llm">AI match${pct}</span>`;
+  }
+  return `<span class="badge badge-neutral">Rule-based match</span>`;
+}
+
+// ---------- Biomechanics (Phase 4) ----------
+function statusLabel(status) {
+  return {
+    within: "✅ within range",
+    under: "⬇️ under range",
+    over: "⬆️ over range",
+    unavailable: "not available",
+  }[status] || status;
+}
+
+function formatMetricLabel(key) {
+  return key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function biomechanicsHtml(biomech) {
+  if (!biomech) {
+    return `<p class="helper">No biomechanics data for this shot.</p>`;
+  }
+  let html = `<p class="archetype-note">Illustrative technique benchmarks (archetype: ${escapeHtml(biomech.archetype)}) - coaching heuristics authored for this app, not validated sports-science data.</p>`;
+  if (biomech.overall_score != null) {
+    html += `<p><strong>Overall score:</strong> ${biomech.overall_score}% of evaluated metrics within range</p>`;
+  }
+  html += `<ul class="biomech-list">`;
+  Object.entries(biomech.metrics).forEach(([key, m]) => {
+    html += `<li><strong>${escapeHtml(formatMetricLabel(key))}:</strong> `;
+    if (m.status === "unavailable" || m.value == null) {
+      html += `<span class="status-unavailable">not available for this analysis</span>`;
+    } else {
+      html += `${m.value.toFixed(1)}${m.unit} (benchmark ${m.range[0]}&ndash;${m.range[1]}${m.unit}) `;
+      html += `<span class="status-${m.status}">${statusLabel(m.status)}</span>`;
+    }
+    html += `</li>`;
+  });
+  html += `</ul>`;
+  return html;
+}
+
+function renderBiomechanicsTab(data) {
+  const a = data.analysis;
+  const html = `<div class="card"><h2>${escapeHtml(a.shotInfo.name || "Shot")} &ndash; Biomechanics</h2>${biomechanicsHtml(a.biomechanics)}</div>`;
+  document.getElementById("biomechanicsContainer").innerHTML = html;
+}
+
+// ---------- History (Phase 5) + Shot Map (Phase 6) ----------
+async function loadHistory() {
+  const container = document.getElementById("historyContainer");
+  const playerName = playerNameInput.value || "";
+  container.innerHTML = `<div class="card empty-state"><p>Loading player history...</p></div>`;
+  try {
+    const resp = await fetch(`{{ url_for('api_history') }}?player_name=${encodeURIComponent(playerName)}`);
+    const data = await resp.json();
+    renderHistory(data);
+  } catch (err) {
+    container.innerHTML = `<div class="card empty-state"><p>Could not load history right now.</p></div>`;
+  }
+}
+
+function renderHistory(data) {
+  const container = document.getElementById("historyContainer");
+  if (!data.recentSessions || data.recentSessions.length === 0) {
+    const who = data.playerName ? escapeHtml(data.playerName) : "this session";
+    container.innerHTML = `<div class="card empty-state"><p>No analyzed shots yet for ${who}. Analyze a shot on the Analyze tab (with a player name set) to start building history.</p></div>`;
+    return;
+  }
+
+  let html = `<div class="card"><h3>Recent shots</h3><table class="history-table"><thead><tr><th>When</th><th>Shot</th><th>Front %</th><th>Score</th></tr></thead><tbody>`;
+  data.recentSessions.forEach(s => {
+    const when = (s.created_at || "").slice(0, 16).replace("T", " ");
+    html += `<tr><td>${escapeHtml(when)}</td><td>${escapeHtml(s.shot_key)}</td>`;
+    html += `<td>${s.forward_pct != null ? s.forward_pct + "%" : "-"}</td>`;
+    html += `<td>${s.biomechanics_score != null ? s.biomechanics_score + "%" : "-"}</td></tr>`;
+  });
+  html += `</tbody></table></div>`;
+
+  if (data.shotCounts && data.shotCounts.length) {
+    html += `<div class="card"><h3>Most played</h3><div class="metric-grid">`;
+    data.shotCounts.slice(0, 6).forEach(c => { html += metricTile(c.shot_key, String(c.count)); });
+    html += `</div></div>`;
+  }
+
+  if (data.strongestWeakest && (data.strongestWeakest.strongest || data.strongestWeakest.weakest)) {
+    html += `<div class="card"><h3>Strongest &amp; weakest shot</h3><div class="strongest-weakest">`;
+    if (data.strongestWeakest.strongest) {
+      const st = data.strongestWeakest.strongest;
+      html += metricTile("Strongest: " + st.shot_key, st.avg_score + "% avg (" + st.n + " shots)");
+    }
+    if (data.strongestWeakest.weakest) {
+      const wk = data.strongestWeakest.weakest;
+      html += metricTile("Weakest: " + wk.shot_key, wk.avg_score + "% avg (" + wk.n + " shots)");
+    }
+    html += `</div></div>`;
+  }
+
+  if (data.trend && data.trend.length > 1) {
+    html += `<div class="card"><h3>Biomechanics score trend</h3><p class="helper">Most recent sessions, oldest to newest.</p>`;
+    html += `<div class="timeline-wrap"><canvas id="trendCanvas"></canvas></div></div>`;
+  }
+
+  if (data.wagonWheel && data.wagonWheel.length) {
+    html += `<div class="card"><h3>Shot Map</h3><div class="wagon-wrap" id="wagonWrap"></div>`;
+    html += `<p class="wagon-caption">Illustrative shot-type &rarr; field-position map, not derived from real ball-tracking data.</p></div>`;
+  }
+
+  container.innerHTML = html;
+
+  if (data.trend && data.trend.length > 1) {
+    drawTrendChart(document.getElementById("trendCanvas"), data.trend);
+  }
+  if (data.wagonWheel && data.wagonWheel.length) {
+    drawWagonWheel(document.getElementById("wagonWrap"), data.wagonWheel);
+  }
+}
+
+function drawTrendChart(canvas, trend) {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+  const w = rect.width, h = rect.height, pad = 24;
+  const xFor = i => pad + (i / Math.max(1, trend.length - 1)) * (w - pad * 2);
+  const yFor = score => h - pad - (score / 100) * (h - pad * 2);
+
+  ctx.strokeStyle = "rgba(0,0,0,0.25)";
+  ctx.beginPath();
+  ctx.moveTo(pad, pad); ctx.lineTo(pad, h - pad); ctx.lineTo(w - pad, h - pad);
+  ctx.stroke();
+
+  ctx.strokeStyle = "#1a7a4c";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  trend.forEach((pt, i) => {
+    const x = xFor(i), y = yFor(pt.score);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  trend.forEach((pt, i) => {
+    ctx.beginPath();
+    ctx.arc(xFor(i), yFor(pt.score), 3, 0, Math.PI * 2);
+    ctx.fillStyle = "#1a7a4c";
+    ctx.fill();
+  });
+}
+
+function drawWagonWheel(container, points) {
+  const size = 260, center = size / 2, maxR = size / 2 - 14;
+  let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
+  svg += `<circle cx="${center}" cy="${center}" r="${maxR}" fill="var(--primary-light)" stroke="var(--border)" />`;
+  svg += `<circle cx="${center}" cy="${center}" r="2" fill="var(--text-muted)" />`;
+  points.forEach(p => {
+    const rad = (p.angle_deg - 90) * Math.PI / 180; // -90 so 0deg points "up" (straight down the ground)
+    const r = (p.radius_pct / 100) * maxR;
+    const x = (center + r * Math.cos(rad)).toFixed(1);
+    const y = (center + r * Math.sin(rad)).toFixed(1);
+    svg += `<circle cx="${x}" cy="${y}" r="5" fill="${p.color}"><title>${escapeHtml(p.shot_key)} - ${escapeHtml(p.outcome_label)}</title></circle>`;
+  });
+  svg += `</svg>`;
+  container.innerHTML = svg;
+}
+</script>
+</body>
+</html>

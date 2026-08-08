@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shot Analysis Result</title>
+<style>
+body {
+    background: radial-gradient(circle at top, #146b35 0%, #02150d 55%, #000 100%);
+    color: #fff; font-family: system-ui, sans-serif;
+    padding: 25px;
+    display:flex; justify-content:center;
+}
+.wrap { width:100%; max-width:1100px; }
+.card {
+    position:relative;
+    background: rgba(0,0,0,0.55);
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow:0 18px 40px rgba(0,0,0,0.8);
+}
+h1 { text-align:center; margin-bottom:6px; font-size:2.1rem; }
+.sub { text-align:center; font-size:0.95rem; opacity:0.86; margin-bottom:8px; }
+
+.anim-banner {
+    text-align:center;
+    margin-bottom:12px;
+    font-size:1rem;
+    animation:flash 1.3s infinite;
+}
+@keyframes flash {
+    0%{opacity:1;}
+    50%{opacity:0.6;}
+    100%{opacity:1;}
+}
+
+/* NEW: simple cricket ball animation */
+.cricket-anim {
+    position:relative;
+    height:40px;
+    margin-bottom:8px;
+    overflow:hidden;
+}
+.cricket-anim .ball {
+    position:absolute;
+    top:8px;
+    left:-40px;
+    font-size:1.4rem;
+    animation:ball-move 2.4s linear infinite;
+}
+@keyframes ball-move {
+    0% { left: -40px; }
+    100% { left: calc(100% + 40px); }
+}
+
+img {
+    width:100%;
+    border-radius: 18px;
+    margin-top: 12px;
+    border:2px solid rgba(255,255,255,0.5);
+}
+
+.weight-section { margin-top:20px; }
+.bar {
+    margin-top:8px;
+    width:100%; height:26px;
+    border-radius:999px;
+    display:flex; overflow:hidden;
+    border:1px solid rgba(255,255,255,0.4);
+}
+.backseg { background:#37474f; height:100%; }
+.frontseg { background:linear-gradient(90deg,#ffc400,#ff6d00); height:100%; }
+
+h2, h3 { margin-top:18px; }
+ul { margin-left:22px; margin-top:6px; }
+.back-link {
+    display:block;
+    margin-top:26px;
+    text-align:center;
+    color:#fff;
+    text-decoration:none;
+}
+.back-link:hover { text-decoration:underline; }
+
+.shot-select {
+    margin-top:10px;
+}
+.shot-select select {
+    padding:6px 10px;
+    border-radius:10px;
+    border:none;
+    background:#122325;
+    color:#fff;
+}
+.shot-select button {
+    margin-top:10px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:none;
+    cursor:pointer;
+    background:#ffc400;
+    color:#1b1b1b;
+    font-weight:600;
+}
+
+.timeline-section { margin-top:20px; }
+.timeline-canvas-wrap { position:relative; margin-top:10px; }
+#timelineCanvas { width:100%; height:180px; display:block; background:rgba(255,255,255,0.05); border-radius:14px; border:1px solid rgba(255,255,255,0.3); }
+.phase-ticks { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-top:8px; font-size:0.82rem; opacity:0.9; }
+.phase-ticks span { background:rgba(255,255,255,0.08); padding:3px 9px; border-radius:999px; }
+
+.method-badge {
+    display:inline-block;
+    font-size:0.72rem;
+    font-weight:700;
+    padding:3px 10px;
+    border-radius:999px;
+    margin-left:8px;
+    vertical-align:middle;
+    background:rgba(255,255,255,0.12);
+}
+.method-badge.method-ml { background:#1a7a4c; }
+.method-badge.method-llm { background:#2f6fb0; }
+.method-badge.method-manual { background:#c98b1f; }
+.reasoning-note { font-size:0.8rem; opacity:0.75; margin-top:4px; }
+.biomech-list { margin-left:0; list-style:none; padding:0; }
+.biomech-list li { padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.12); }
+.shot-select input[type=text], .shot-select input[type=number] {
+    padding:6px 10px;
+    border-radius:10px;
+    border:none;
+    background:#122325;
+    color:#fff;
+    margin-top:4px;
+}
+.shot-select label { display:block; margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="card">
+
+    <!-- NEW: cricket ball animation -->
+    <div class="cricket-anim">
+        <div class="ball">🏏</div>
+    </div>
+
+    <h1>Cricket Shot Analysis 🏏</h1>
+    <div class="sub">Impact frame • Pose • Weight transfer • Shot understanding</div>
+
+    <div class="anim-banner">
+        🏟️ Impact Frame Detected – Generating Coaching Insights...
+    </div>
+
+    <!-- Rating + encouragement -->
+    <div style="text-align:center; margin-top:6px;">
+        <strong>{{ rating_label }}</strong><br>
+        <span>{{ encouragement }}</span>
+    </div>
+
+    <!-- Image with pose -->
+    <img src="{{ image_url }}" alt="Analyzed Impact Frame">
+
+    <!-- Weight transfer -->
+    <div class="weight-section">
+        <h2>Weight Transfer</h2>
+        <div class="bar">
+            <div class="backseg" style="width: {{ back_pct }}%;"></div>
+            <div class="frontseg" style="width: {{ forward_pct }}%;"></div>
+        </div>
+        <p style="margin-top:4px;">
+            Back foot: <b>{{ back_pct }}%</b> &nbsp;|&nbsp;
+            Front foot: <b>{{ forward_pct }}%</b>
+        </p>
+    </div>
+
+    <!-- Shot timeline (video uploads only, when segmentation succeeded) -->
+    {% if is_video and phase_markers and weight_transfer_series %}
+    <div class="timeline-section">
+        <h2>Shot Timeline 📈</h2>
+        <p style="opacity:0.85; font-size:0.9rem;">Front-foot weight % across the swing, with the estimated phase boundaries below.</p>
+        <div class="timeline-canvas-wrap">
+            <canvas id="timelineCanvas"></canvas>
+        </div>
+        <div class="phase-ticks">
+            <span>Stance: {{ phase_markers.stance_ms }}ms</span>
+            <span>Backlift: {{ phase_markers.backlift_ms }}ms</span>
+            <span>Downswing: {{ phase_markers.downswing_start_ms }}ms</span>
+            <span>Impact: {{ phase_markers.impact_ms }}ms</span>
+            <span>Follow-through: {{ phase_markers.follow_through_start_ms }}ms</span>
+        </div>
+    </div>
+    <script>
+    (function() {
+        var series = {{ weight_transfer_series | tojson }};
+        var impactMs = {{ phase_markers.impact_ms | tojson }};
+        var canvas = document.getElementById('timelineCanvas');
+        if (!canvas || !series || series.length < 2) return;
+
+        var dpr = window.devicePixelRatio || 1;
+        var rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        var ctx = canvas.getContext('2d');
+        ctx.scale(dpr, dpr);
+
+        var w = rect.width, h = rect.height, pad = 24;
+        var minT = series[0].t_ms, maxT = series[series.length - 1].t_ms;
+        var spanT = Math.max(1, maxT - minT);
+
+        function xFor(t) { return pad + ((t - minT) / spanT) * (w - pad * 2); }
+        function yFor(pct) { return h - pad - (pct / 100) * (h - pad * 2); }
+
+        // axis
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        ctx.beginPath();
+        ctx.moveTo(pad, pad); ctx.lineTo(pad, h - pad); ctx.lineTo(w - pad, h - pad);
+        ctx.stroke();
+
+        // impact marker
+        var ix = xFor(impactMs);
+        ctx.strokeStyle = 'rgba(255,109,0,0.8)';
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath(); ctx.moveTo(ix, pad); ctx.lineTo(ix, h - pad); ctx.stroke();
+        ctx.setLineDash([]);
+
+        // forward_pct line
+        ctx.strokeStyle = '#ffc400';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        series.forEach(function(pt, i) {
+            var x = xFor(pt.t_ms), y = yFor(pt.forward_pct);
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+    })();
+    </script>
+    {% endif %}
+
+    <!-- Bat & ball tracking (video uploads only) -->
+    {% if is_video %}
+    <div class="timeline-section">
+        <h2>Bat &amp; Ball Tracking 🏏</h2>
+
+        {% if bat_metrics and bat_metrics.available %}
+        <ul>
+            <li>Backlift angle: {{ '%.0f'|format(bat_metrics.backlift_angle_deg) }}&deg; from vertical</li>
+            <li>Downswing angle: {{ '%.0f'|format(bat_metrics.downswing_angle_deg) }}&deg; from vertical</li>
+            <li>Bat speed at impact:
+                {% if bat_metrics.bat_speed_px_s is not none %}
+                    {% if is_calibrated and bat_metrics.bat_speed_kmh is not none %}
+                        {{ '%.1f'|format(bat_metrics.bat_speed_kmh) }} km/h
+                    {% else %}
+                        {{ '%.0f'|format(bat_metrics.bat_speed_px_s) }} px/s (uncalibrated - add a calibration reference for km/h)
+                    {% endif %}
+                {% else %}
+                    Not enough frame timing around impact to estimate.
+                {% endif %}
+            </li>
+            <li>Point of contact vs front foot:
+                {% if is_calibrated and bat_metrics.contact_offset_cm %}
+                    {{ '%.1f'|format(bat_metrics.contact_offset_cm[0]) }}cm horizontal, {{ '%.1f'|format(bat_metrics.contact_offset_cm[1]) }}cm vertical
+                {% else %}
+                    {{ bat_metrics.contact_offset_px[0]|round(1) }}px horizontal, {{ bat_metrics.contact_offset_px[1]|round(1) }}px vertical (uncalibrated)
+                {% endif %}
+            </li>
+        </ul>
+        {% else %}
+        <p>{{ bat_metrics.note if bat_metrics else "No bat marker (ArUco marker or bright tape) was detected in this clip - attach one to see swing metrics." }}</p>
+        {% endif %}
+
+        <h3>Ball line &amp; length</h3>
+        {% if ball_estimate and ball_estimate.available %}
+        <p>{{ ball_estimate.line }} &nbsp;|&nbsp; {{ ball_estimate.length }}</p>
+        <p style="opacity:0.75; font-size:0.85rem;">{{ ball_estimate.note }}</p>
+        {% else %}
+        <p style="opacity:0.75; font-size:0.85rem;">{{ ball_estimate.note if ball_estimate else "Ball wasn't visible/trackable clearly enough in this clip." }}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Biomechanics (Phase 4) -->
+    {% if biomechanics %}
+    <div class="timeline-section">
+        <h2>Biomechanics 🦵</h2>
+        <p style="opacity:0.8; font-size:0.82rem;">
+            Illustrative technique benchmarks (archetype: {{ biomechanics.archetype }}) - coaching heuristics
+            authored for this app, not validated sports-science data.
+        </p>
+        {% if biomechanics.overall_score is not none %}
+        <p><strong>Overall score:</strong> {{ biomechanics.overall_score }}% of evaluated metrics within range</p>
+        {% endif %}
+        <ul class="biomech-list">
+            {% for key, m in biomechanics.metrics.items() %}
+            <li>
+                <strong>{{ key.replace('_', ' ')|title }}:</strong>
+                {% if m.status == 'unavailable' %}
+                    not available for this analysis
+                {% else %}
+                    {{ '%.1f'|format(m.value) }}{{ m.unit }}
+                    (benchmark {{ m.range[0] }}&ndash;{{ m.range[1] }}{{ m.unit }})
+                    {% if m.status == 'within' %}✅ within range
+                    {% elif m.status == 'under' %}⬇️ under range
+                    {% elif m.status == 'over' %}⬆️ over range
+                    {% endif %}
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Mistakes / corrections -->
+    {% if mistakes %}
+    <h3>Things to Improve</h3>
+    <ul>
+        {% for m in mistakes %}
+            <li>{{ m }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <!-- Shot intelligence -->
+    <h2 style="margin-top:24px;">Shot Intelligence 🧠</h2>
+    <p>
+        <strong>Detected Shot:</strong> {{ shot_name }}
+        {% if classification_method == 'ml' %}
+            <span class="method-badge method-ml">ML match{% if classification_confidence is not none %} ({{ (classification_confidence * 100)|round|int }}%){% endif %}</span>
+        {% elif classification_method == 'llm' %}
+            <span class="method-badge method-llm">AI match{% if classification_confidence is not none %} ({{ (classification_confidence * 100)|round|int }}%){% endif %}</span>
+        {% elif classification_method == 'manual' %}
+            <span class="method-badge method-manual">Manually corrected</span>
+        {% else %}
+            <span class="method-badge">Rule-based match</span>
+        {% endif %}
+    </p>
+    {% if classification_reasoning %}
+    <p class="reasoning-note">AI reasoning: {{ classification_reasoning }}</p>
+    {% endif %}
+
+    <!-- NEW: Shot correction dropdown (DB-based) -->
+    <form action="{{ url_for('update_shot') }}" method="POST" class="shot-select">
+        <label><strong>Is this the correct shot?</strong></label><br>
+        <select name="correct_shot">
+            {% for s in all_shots %}
+                <option value="{{ s }}" {% if s == current_shot %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+        </select>
+        <input type="hidden" name="image_url" value="{{ image_url }}">
+        <input type="hidden" name="video_url" value="{{ video_url or '' }}">
+        <input type="hidden" name="session_id" value="{{ session_id or '' }}">
+        <input type="hidden" name="angle" value="{{ angle }}">
+        <input type="hidden" name="forward_pct" value="{{ forward_pct }}">
+        <label for="player_name"><strong>Player name (optional):</strong></label><br>
+        <input id="player_name" type="text" name="player_name" maxlength="80" value="{{ player_name }}" placeholder="For example: A. Sharma">
+        <button type="submit">✔ Update Shot Information</button>
+    </form>
+
+    <!-- NEW: match-context tagging (Phase 6) -->
+    {% if session_id %}
+    <div class="timeline-section">
+        <h2>Tag Match Context (optional) 🏟️</h2>
+        <form action="{{ url_for('tag_shot') }}" method="POST" class="shot-select">
+            <input type="hidden" name="session_id" value="{{ session_id }}">
+            <label for="over_number">Over number</label>
+            <input id="over_number" type="number" name="over_number" min="0" placeholder="e.g. 12">
+            <label for="bowler_type">Bowler type</label>
+            <select id="bowler_type" name="bowler_type">
+                <option value="">Not specified</option>
+                <option value="pace">Pace</option>
+                <option value="spin">Spin</option>
+            </select>
+            <label for="line_length">Line/length faced</label>
+            <input id="line_length" type="text" name="line_length"
+                   value="{{ ball_estimate.length if ball_estimate and ball_estimate.available else '' }}"
+                   placeholder="e.g. Good length, off stump">
+            <label for="outcome_runs">Runs scored</label>
+            <input id="outcome_runs" type="number" name="outcome_runs" min="0" max="6" placeholder="0-6">
+            <label><input type="checkbox" name="outcome_dismissal"> Dismissed on this ball</label>
+            <button type="submit" style="margin-top:12px;">Save match context</button>
+        </form>
+    </div>
+    {% endif %}
+
+    <p><strong>Summary:</strong> {{ shot_summary }}</p>
+    <p><strong>Primary Ground Placement:</strong> {{ field_suggestion }}</p>
+
+    <h3>Variations You Can Practise</h3>
+    <ul>
+        {% for v in variations %}
+            <li>{{ v }}</li>
+        {% endfor %}
+    </ul>
+
+    <p><strong>Players Who Master This Shot:</strong> {{ master_player }}</p>
+    <p><strong>History:</strong> {{ shot_history }}</p>
+    <p><strong>Core Improvement Tip:</strong> {{ improvement_summary }}</p>
+
+    <!-- Advanced field suggestions -->
+    <h2 style="margin-top:24px;">Advanced Direction & Field Placement 🎯</h2>
+
+    <h3>Safe Ground Placements (low risk scoring)</h3>
+    <ul>
+        {% for s in alt_safe %}
+            <li>{{ s }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Aggressive Boundary Options (power scoring)</h3>
+    <ul>
+        {% for s in alt_aggressive %}
+            <li>{{ s }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Final feedback -->
+    <h2 style="margin-top:24px;">Final 5 Coaching Feedback Points 📝</h2>
+    <ul>
+        {% for f in final_feedback %}
+            <li>{{ f }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('index') }}" class="back-link">⟵ Analyze another shot</a>
+
+</div>
+</div>
+</body>
+</html>

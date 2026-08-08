@@ -1,0 +1,14 @@
+Flask>=3.0,<4.0
+mediapipe==0.10.9
+numpy>=1.24
+opencv-python>=4.8,<5
+gdown>=4.7.1
+scikit-learn>=1.3
+google-genai>=0.7
+python-dotenv>=1.0
+
+# Requires Python >=3.9 (google-genai's floor). Project venv runs Python 3.11.
+# mediapipe is pinned to 0.10.9 specifically: newer 1.x releases drop the
+# legacy mp.solutions drawing API this app's skeleton overlay depends on.
+# opencv-python is capped below 5.x - untested against this app's aruco/
+# HoughCircles/VideoWriter usage, which was validated against the 4.x line.

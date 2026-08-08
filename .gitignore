@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+venv_py38_backup/
+static/uploads/
+static/outputs/
+dataset/shot_corrections.jsonl
+dataset/raw/
+training_source/
+instance/
+models/*.joblib
+.env
+.env.local
+*.db
+pose_landmarker.task
+templates - Copy/

@@ -1,0 +1,47 @@
+{
+  "_note": "Illustrative coaching heuristics authored for this app, loosely modeled on commonly-cited textbook technique. NOT sports-science-validated data and NOT tied to any specific real player's measurements. Grouped by technique archetype rather than per-shot to avoid overstating precision this app doesn't have.",
+
+  "generic": {
+    "head_knee_offset_cm": [0, 10]
+  },
+
+  "archetypes": {
+    "Drive": {
+      "front_knee_flex_deg": [120, 155],
+      "elbow_extension_deg": [150, 180],
+      "shoulder_hip_rotation_deg": [15, 35],
+      "bat_speed_kmh": [45, 75]
+    },
+    "Cut-Pull-Hook": {
+      "front_knee_flex_deg": [100, 135],
+      "elbow_extension_deg": [110, 160],
+      "shoulder_hip_rotation_deg": [40, 70],
+      "bat_speed_kmh": [65, 100]
+    },
+    "Sweep": {
+      "front_knee_flex_deg": [70, 110],
+      "elbow_extension_deg": [130, 170],
+      "shoulder_hip_rotation_deg": [35, 60],
+      "bat_speed_kmh": [45, 75]
+    },
+    "Wristy": {
+      "front_knee_flex_deg": [130, 160],
+      "elbow_extension_deg": [120, 160],
+      "shoulder_hip_rotation_deg": [10, 30],
+      "bat_speed_kmh": [30, 55]
+    },
+    "Defensive": {
+      "front_knee_flex_deg": [110, 150],
+      "elbow_extension_deg": [90, 130],
+      "shoulder_hip_rotation_deg": [5, 20],
+      "bat_speed_kmh": [15, 35]
+    },
+    "Modern-Power": {
+      "_note": "Wide ranges - this archetype covers scoops, ramps, helicopter, switch hits and reverse shots, which vary hugely in technique.",
+      "front_knee_flex_deg": [80, 160],
+      "elbow_extension_deg": [100, 170],
+      "shoulder_hip_rotation_deg": [30, 80],
+      "bat_speed_kmh": [60, 120]
+    }
+  }
+}

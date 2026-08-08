@@ -420,5 +420,257 @@
       "Avoid throwing your bat too hard at the ball.",
       "Use this shot mainly when there is no third man."
     ]
+  },
+  "Off Drive": {
+    "summary": "Front-foot drive played straighter than a cover drive, through mid-off.",
+    "fields": "Mid-off, extra cover, straight down the ground.",
+    "variations": [
+      "Checked off drive",
+      "Lofted off drive"
+    ],
+    "masters": "Rahul Dravid, Steve Smith, Virat Kohli",
+    "history": "A cornerstone of classical Test-match batting, prized for its straight, high-elbow technique.",
+    "improve": "Play with a straight bat close to the pad, weight fully forward onto a firm front knee.",
+    "alt_safe": [
+      "Soft push to mid-off for a single",
+      "Check the drive down if the fielder is inside the circle",
+      "Steer into the gap between mid-off and cover"
+    ],
+    "alt_aggressive": [
+      "Loft over mid-off when the field is up",
+      "Drive hard through extra cover",
+      "Go straight over the bowler's head"
+    ],
+    "final_feedback": [
+      "Get your front foot to the pitch of the ball.",
+      "Keep the bat face straight through impact.",
+      "Lead with a high, controlled elbow.",
+      "Watch the ball onto the bat rather than looking up early.",
+      "Avoid playing away from your body."
+    ]
+  },
+  "Square Drive": {
+    "summary": "A drive played square of the wicket to a fuller, wide ball outside off.",
+    "fields": "Cover, backward point, deep cover.",
+    "variations": [
+      "Cover-point square drive",
+      "Checked square drive"
+    ],
+    "masters": "Sachin Tendulkar, Ricky Ponting, Joe Root",
+    "history": "Sits between the cover drive and the square cut, used to punish width that's still full enough to drive.",
+    "improve": "Get your head and weight over the ball with a full, free swing of the bat.",
+    "alt_safe": [
+      "Punch it along the ground through cover",
+      "Ease it into the gap for a single",
+      "Check the shot if the fielder is saving one"
+    ],
+    "alt_aggressive": [
+      "Cream it through backward point for four",
+      "Go over cover if the field is up",
+      "Free the arms through extra cover"
+    ],
+    "final_feedback": [
+      "Judge width and length together before committing.",
+      "Transfer weight fully onto the front foot.",
+      "Swing through the line, not across it.",
+      "Keep your head steady over the point of contact.",
+      "Don't reach - let the ball come into your hitting arc."
+    ]
+  },
+  "Leg Glance": {
+    "summary": "A very fine, minimal-bat-movement deflection off the pads to the leg side.",
+    "fields": "Fine leg, backward square leg.",
+    "variations": [
+      "Glance off the pads",
+      "Fine leg glance"
+    ],
+    "masters": "Mohammad Yousuf, Rahul Dravid, Younis Khan",
+    "history": "A classical touch shot, relying on soft hands and timing rather than power to use the ball's own pace.",
+    "improve": "Turn the wrists gently at the point of contact and let the ball run off the bat.",
+    "alt_safe": [
+      "Simply let a straighter ball go through to the keeper",
+      "Turn it fine for a controlled single",
+      "Ride the bounce and drop it short of the fielder"
+    ],
+    "alt_aggressive": [
+      "Firm glance into the fine-leg gap for four",
+      "Open the face more for a squarer, faster deflection",
+      "Time it through a straighter fine-leg boundary"
+    ],
+    "final_feedback": [
+      "Keep the bat face soft, not a full swing.",
+      "Let the ball come all the way to you.",
+      "Use minimal wrist turn - timing over power.",
+      "Stay leg-side of the ball to control direction.",
+      "Only glance balls close to the body, not wide ones."
+    ]
+  },
+  "Forward Defense": {
+    "summary": "A front-foot defensive shot that smothers the ball's pace to protect the stumps.",
+    "fields": "No specific scoring field - a purely defensive stroke.",
+    "variations": [
+      "Soft-hands forward defense",
+      "Firm forward block"
+    ],
+    "masters": "Rahul Dravid, Cheteshwar Pujara, Alastair Cook",
+    "history": "The foundation stroke of Test-match batting, built to survive good-length deliveries on a straight line.",
+    "improve": "Get your front foot fully to the pitch of the ball with bat and pad close together.",
+    "alt_safe": [
+      "Let the ball hit the middle of a still bat",
+      "Cushion the ball dead in front of you",
+      "Leave deliveries clearly outside off stump instead"
+    ],
+    "alt_aggressive": [
+      "Not a scoring shot - look to rotate strike on the next ball instead",
+      "Convert to a firm push if the length is fractionally fuller",
+      "Wait for a scoring opportunity rather than forcing this one"
+    ],
+    "final_feedback": [
+      "Get your head over the ball, front knee bent.",
+      "Keep bat and pad together to eliminate the gap.",
+      "Watch the ball right onto the bat face.",
+      "Stay still - avoid any premature bat swing.",
+      "Play it with soft hands to kill the pace."
+    ]
+  },
+  "Backward Defense": {
+    "summary": "A back-foot defensive shot used against a shorter, quicker length.",
+    "fields": "No specific scoring field - a purely defensive stroke.",
+    "variations": [
+      "Soft-hands back-foot block",
+      "Firm back-foot press"
+    ],
+    "masters": "Steve Smith, Cheteshwar Pujara, Kane Williamson",
+    "history": "The back-foot counterpart to the forward defense, essential against extra bounce and pace.",
+    "improve": "Rock back early, keep the bat close to the body, and watch the ball all the way in.",
+    "alt_safe": [
+      "Drop the ball dead at your feet",
+      "Ride the bounce with soft hands",
+      "Sway out of line if it's not close to the stumps"
+    ],
+    "alt_aggressive": [
+      "Not a scoring shot - reassess on the next ball for width or length",
+      "Punch it away if the bounce is gentler than expected",
+      "Look to rotate strike with a softer version next ball"
+    ],
+    "final_feedback": [
+      "Transfer weight fully onto the back foot early.",
+      "Keep your hands soft to absorb the pace.",
+      "Watch the ball onto the bat, not the fielders.",
+      "Stay tall and balanced through the shot.",
+      "Don't commit too early - read length off the pitch."
+    ]
+  },
+  "Switch Hit": {
+    "summary": "The batter completely switches grip and stance to hit as the opposite-handed batter.",
+    "fields": "Reverses the whole field - effectively turns off side into leg side and vice versa.",
+    "variations": [
+      "Switch drive",
+      "Switch pull"
+    ],
+    "masters": "Kevin Pietersen, Jos Buttler, David Warner",
+    "history": "Invented by Kevin Pietersen in 2008, one of the most technically demanding modern strokes.",
+    "improve": "Practise the full stance-and-grip change slowly before adding bowling pace.",
+    "alt_safe": [
+      "Abort the switch and play it in the normal stance if unsure",
+      "Only switch to deliveries clearly within your arc",
+      "Keep the switched shot along the ground early on"
+    ],
+    "alt_aggressive": [
+      "Switch-hit over the reversed leg side for six",
+      "Target the gap left by a field set for the normal stance",
+      "Go over the top once the switch is grooved"
+    ],
+    "final_feedback": [
+      "Only attempt this once basic strokes are fully mastered.",
+      "Commit early and completely - a half switch is dangerous.",
+      "Check the legality of your stance change with the laws in mind.",
+      "Use it as a surprise weapon, not a stock shot.",
+      "Practise extensively in the nets before using it in a match."
+    ]
+  },
+  "Ramp Shot": {
+    "summary": "An upright scoop that redirects a fuller, faster ball up and over the keeper.",
+    "fields": "Fine leg, short third man, over the keeper.",
+    "variations": [
+      "Upper ramp",
+      "Fine ramp"
+    ],
+    "masters": "AB de Villiers, Jos Buttler, Suryakumar Yadav",
+    "history": "A T20-era shot built to attack fast bowlers who bowl full and straight at the death.",
+    "improve": "Stay tall and use soft hands to guide the ball's own pace over the keeper.",
+    "alt_safe": [
+      "Angle the bat face to drop it short of the keeper",
+      "Only play it to a full, straight ball",
+      "Bail out into a normal defensive shot if it's not full enough"
+    ],
+    "alt_aggressive": [
+      "Full ramp over the keeper's head for six",
+      "Fine ramp over short third man",
+      "Go over a straighter fine-leg boundary"
+    ],
+    "final_feedback": [
+      "Only play this to a genuinely full, fast delivery.",
+      "Keep your head still and eyes on the ball throughout.",
+      "Use the bowler's pace - don't try to muscle it.",
+      "Practise extensively before using it under match pressure.",
+      "Know exactly where the keeper and slips are standing."
+    ]
+  },
+  "Dilscoop": {
+    "summary": "A very fine, near-vertical scoop played from a low position over the wicketkeeper's head.",
+    "fields": "Directly over the keeper, very fine of the stumps.",
+    "variations": [
+      "High-risk Dilscoop",
+      "Controlled low Dilscoop"
+    ],
+    "masters": "Tillakaratne Dilshan, Glenn Maxwell",
+    "history": "Named after Tillakaratne Dilshan, who popularized it in T20 cricket against full, fast bowling.",
+    "improve": "Get your head and body very low and in line with the ball before scooping.",
+    "alt_safe": [
+      "Convert to a simple ramp if not fully set",
+      "Only attempt against a genuinely full, straight ball",
+      "Leave the ball if it's not there to be scooped safely"
+    ],
+    "alt_aggressive": [
+      "Full Dilscoop over the keeper for six",
+      "Go fine over a short third man",
+      "Attack a yorker-length ball with full commitment"
+    ],
+    "final_feedback": [
+      "This is a high-risk shot - only play it with full control.",
+      "Get very low, with your head in line with off stump.",
+      "Watch the ball right into your hitting zone.",
+      "Practise on a bowling machine before facing real pace.",
+      "Have a clear plan for the field before attempting it."
+    ]
+  },
+  "Reverse Pull": {
+    "summary": "A pull shot redirected to the off side using a switch-hit-style reversed position.",
+    "fields": "Backward point, third man, deep cover.",
+    "variations": [
+      "Reverse pull for one",
+      "Aggressive reverse pull"
+    ],
+    "masters": "Glenn Maxwell, Jos Buttler",
+    "history": "A rare, highly skilled modern variation used to counter a leg-side-heavy field against short bowling.",
+    "improve": "Commit early to the reversed position and keep your head still through the shot.",
+    "alt_safe": [
+      "Abort into a normal pull if the switch isn't clean",
+      "Keep it along the ground early in an innings",
+      "Only attempt against bowling well within your comfort speed"
+    ],
+    "alt_aggressive": [
+      "Reverse pull over backward point for six",
+      "Target the gap left by a leg-side field",
+      "Go over deep cover once the shot is grooved"
+    ],
+    "final_feedback": [
+      "Master the standard pull and switch hit before combining them.",
+      "Commit fully - a hesitant reverse pull is high-risk.",
+      "Keep your eyes on the ball through the full rotation.",
+      "Use it sparingly, as a planned surprise shot.",
+      "Rehearse extensively in the nets first."
+    ]
   }
 }
