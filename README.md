@@ -2,7 +2,7 @@
 
 A Flask app that analyzes a batter's technique from an ordinary photo or slow-mo phone video — pose estimation, weight transfer, bat/ball tracking, biomechanics scoring, shot classification, and session history — with no specialized hardware, just a camera and free/open-source software.
 
-> Early demo (single-photo version, before most of what's described below existed)
+## Early demo:https://youtu.be/RsBXjcwd1G0
 
 ## What it does
 
