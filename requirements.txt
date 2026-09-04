@@ -6,6 +6,7 @@ gdown>=4.7.1
 scikit-learn>=1.3
 google-genai>=0.7
 python-dotenv>=1.0
+requests>=2.31
 
 # Requires Python >=3.9 (google-genai's floor). Project venv runs Python 3.11.
 # mediapipe is pinned to 0.10.9 specifically: newer 1.x releases drop the
